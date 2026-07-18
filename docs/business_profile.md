@@ -42,7 +42,8 @@ Cases are reviewed individually.
 Each case is either:
 
 - Actioned
-- Marked N/A
+- Marked No Action
+- Raised
 
 Comments are added where appropriate.
 
