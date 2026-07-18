@@ -1,0 +1,135 @@
+Case ID,Policy Number,Client Number,Snapshot Date,Outstanding Amount,Cancellation Status,Cancelling Department,Cancelling Agent,Agent Working,Refund Type,Root Cause,Customer Contacted,Outcome
+DH001602,PET001602,CL000112,2025-11-30,36.74,Cancelled,Customer Service,CS006,DH002,Cancellation Before Premium Due,Refund Mailbox Delay,Yes,Actioned
+DH001603,PET001603,CL000086,2025-11-30,81.18,Cancelled,Retentions,RET007,DH001,Cancellation Before Premium Due,Payment Date Misunderstood,No,No Action
+DH001604,PET001604,CL000012,2025-11-30,31.38,Void,Customer Service,CS006,DH001,Cancellation from Renewal (Void),Payment Date Misunderstood,No,Actioned
+DH001605,PET001605,CL000045,2025-11-30,68.61,Void,Claims,CLM006,DH001,Cancellation from Renewal (Void),Agent Forgot,No,Raised
+DH001606,PET001606,CL000077,2025-11-30,55.21,Void,Customer Service,CS009,DH001,Death of Pet,Waiting for Information,No,Actioned
+DH001607,PET001607,CL000011,2025-11-30,58.89,Cancelled,Claims,CLM008,DH002,Cancellation Before Premium Due,Agent Forgot,No,Actioned
+DH001608,PET001608,CL000199,2025-11-30,69.39,Cancelled,Retentions,RET010,DH001,Cancellation Before Premium Due,Waiting for Information,Yes,No Action
+DH001609,PET001609,CL000029,2025-11-30,85.75,Cancelled,Retentions,RET006,DH001,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001610,PET001610,CL000029,2025-11-30,29.43,Void,Customer Service,CS023,DH001,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001611,PET001611,CL000157,2025-11-30,34.52,Cancelled,Customer Service,CS021,DH001,Death of Pet,Agent Forgot,Yes,Actioned
+DH001612,PET001612,CL000111,2025-11-30,10.85,Void,Retentions,RET001,DH001,Death of Pet,Agent Forgot,No,Actioned
+DH001613,PET001613,CL000102,2025-11-30,13.86,Void,Claims,CLM005,DH001,Cancellation from Renewal (Void),Waiting for Information,No,Actioned
+DH001614,PET001614,CL000091,2025-11-30,16.48,Cancelled,Retentions,RET025,DH001,Death of Pet,Agent Forgot,Yes,Actioned
+DH001615,PET001615,CL000112,2025-11-30,271.56,Cancelled,Claims,CLM009,DH002,Cancellation Before Premium Due,Waiting for Information,Yes,No Action
+DH001616,PET001616,CL000105,2025-11-30,116.67,Cancelled,Customer Service,CS018,DH002,Death of Pet,Payment Date Misunderstood,No,No Action
+DH001617,PET001617,CL000028,2025-11-30,1.21,Cancelled,Retentions,RET029,DH001,Cancellation Before Premium Due,Payment Date Misunderstood,No,No Action
+DH001618,PET001618,CL000188,2025-11-30,169.87,Void,Customer Service,CS003,DH002,Death of Pet,Agent Forgot,No,Actioned
+DH001619,PET001619,CL000124,2025-11-30,13.81,Void,Customer Service,CS019,DH001,Death of Pet,Agent Forgot,Yes,Actioned
+DH001620,PET001620,CL000069,2025-11-30,13.01,Void,Complaints,CMP001,DH002,Cancellation from Renewal (Void),Agent Forgot,Yes,Actioned
+DH001621,PET001621,CL000149,2025-11-30,82.17,Void,Customer Service,CS006,DH001,Cancellation from Renewal (Void),Waiting for Information,Yes,Actioned
+DH001622,PET001622,CL000095,2025-11-30,91.1,Cancelled,Customer Service,CS012,DH001,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001623,PET001623,CL000042,2025-11-30,18.95,Cancelled,Customer Service,CS025,DH002,Cancellation Before Premium Due,Waiting for Information,No,Actioned
+DH001624,PET001624,CL000114,2025-11-30,29.01,Cancelled,Retentions,RET019,DH002,Death of Pet,Agent Forgot,No,Actioned
+DH001625,PET001625,CL000142,2025-11-30,72.87,Cancelled,Customer Service,CS018,DH002,Cancellation Before Premium Due,Waiting for Information,Yes,Actioned
+DH001626,PET001626,CL000131,2025-11-30,34.33,Void,Retentions,RET008,DH002,Cancellation from Renewal (Void),Agent Forgot,No,Actioned
+DH001627,PET001627,CL000188,2025-11-30,42.34,Cancelled,Customer Service,CS018,DH001,Death of Pet,Waiting for Information,Yes,Actioned
+DH001628,PET001628,CL000101,2025-11-30,66.34,Cancelled,Complaints,CMP002,DH002,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001629,PET001629,CL000016,2025-11-30,5.67,Void,Retentions,RET004,DH001,Death of Pet,Agent Forgot,Yes,Actioned
+DH001630,PET001630,CL000011,2025-11-30,22.21,Void,Customer Service,CS020,DH002,Death of Pet,Refund Mailbox Delay,No,Actioned
+DH001631,PET001631,CL000061,2025-11-30,9.29,Cancelled,Retentions,RET001,DH001,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001632,PET001632,CL000200,2025-11-30,35.81,Cancelled,Retentions,RET010,DH001,Cancellation Before Premium Due,Waiting for Information,Yes,Actioned
+DH001633,PET001633,CL000139,2025-11-30,94.86,Void,Retentions,RET025,DH002,Cancellation from Renewal (Void),Refund Mailbox Delay,No,Actioned
+DH001634,PET001634,CL000042,2025-11-30,35.71,Void,Customer Service,CS014,DH002,Cancellation from Renewal (Void),Payment Date Misunderstood,No,No Action
+DH001635,PET001635,CL000078,2025-11-30,150.42,Cancelled,Complaints,CMP004,DH002,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001636,PET001636,CL000096,2025-11-30,47.6,Cancelled,Retentions,RET011,DH002,Cancellation Before Premium Due,Agent Forgot,No,Actioned
+DH001637,PET001637,CL000109,2025-11-30,59.22,Void,Retentions,RET001,DH002,Death of Pet,Agent Forgot,Yes,Actioned
+DH001638,PET001638,CL000067,2025-11-30,29.22,Cancelled,Customer Service,CS011,DH002,Cancellation Before Premium Due,Agent Forgot,Yes,Actioned
+DH001639,PET001639,CL000060,2025-11-30,22.51,Cancelled,Retentions,RET011,DH002,Death of Pet,Waiting for Information,No,Actioned
+DH001640,PET001640,CL000190,2025-11-30,15.12,Void,Claims,CLM008,DH001,Cancellation from Renewal (Void),Agent Forgot,No,Actioned
+DH001641,PET001641,CL000041,2025-11-30,20.84,Cancelled,Customer Service,CS020,DH002,Cancellation Before Premium Due,Waiting for Information,No,Actioned
+DH001642,PET001642,CL000047,2025-11-30,22.22,Cancelled,Retentions,RET023,DH002,Death of Pet,Agent Forgot,No,Actioned
+DH001643,PET001643,CL000115,2025-11-30,3.69,Cancelled,Retentions,RET010,DH001,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001644,PET001644,CL000055,2025-11-30,15.65,Void,Customer Service,CS024,DH002,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001645,PET001645,CL000147,2025-11-30,20.41,Cancelled,Customer Service,CS002,DH002,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001646,PET001646,CL000108,2025-11-30,7.98,Cancelled,Retentions,RET021,DH001,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001647,PET001647,CL000143,2025-11-30,8.05,Cancelled,Retentions,RET027,DH002,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001648,PET001648,CL000105,2025-11-30,36.44,Cancelled,Customer Service,CS016,DH001,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001649,PET001649,CL000075,2025-11-30,25.27,Cancelled,Customer Service,CS006,DH002,Cancellation Before Premium Due,Payment Date Misunderstood,No,Actioned
+DH001650,PET001650,CL000102,2025-11-30,6.24,Cancelled,Claims,CLM005,DH002,Death of Pet,Agent Forgot,Yes,Actioned
+DH001651,PET001651,CL000013,2025-11-30,32.17,Void,Customer Service,CS008,DH002,Death of Pet,Agent Forgot,Yes,Actioned
+DH001652,PET001652,CL000074,2025-11-30,21.8,Cancelled,Customer Service,CS010,DH002,Cancellation Before Premium Due,Agent Forgot,No,No Action
+DH001653,PET001653,CL000199,2025-11-30,66.44,Void,Retentions,RET017,DH001,Cancellation from Renewal (Void),Agent Forgot,No,Actioned
+DH001654,PET001654,CL000037,2025-11-30,7.58,Void,Customer Service,CS022,DH001,Cancellation from Renewal (Void),Payment Date Misunderstood,No,Actioned
+DH001655,PET001655,CL000116,2025-11-30,73.11,Void,Customer Service,CS017,DH002,Cancellation from Renewal (Void),Payment Date Misunderstood,No,Actioned
+DH001656,PET001656,CL000069,2025-11-30,60.31,Void,Customer Service,CS013,DH001,Death of Pet,Agent Forgot,Yes,Actioned
+DH001657,PET001657,CL000193,2025-11-30,31.46,Void,Customer Service,CS020,DH002,Cancellation from Renewal (Void),Payment Date Misunderstood,No,Actioned
+DH001658,PET001658,CL000003,2025-11-30,51.14,Void,Customer Service,CS024,DH001,Cancellation from Renewal (Void),Agent Forgot,No,Actioned
+DH001659,PET001659,CL000038,2025-11-30,27.01,Cancelled,Claims,CLM006,DH001,Cancellation Before Premium Due,Agent Forgot,No,Actioned
+DH001660,PET001660,CL000006,2025-11-30,73.24,Cancelled,Customer Service,CS022,DH002,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001661,PET001661,CL000062,2025-11-30,54.0,Cancelled,Retentions,RET019,DH002,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001662,PET001662,CL000011,2025-11-30,37.61,Cancelled,Retentions,RET017,DH001,Death of Pet,Waiting for Information,Yes,Actioned
+DH001663,PET001663,CL000053,2025-11-30,46.23,Void,Claims,CLM009,DH002,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001664,PET001664,CL000090,2025-11-30,33.99,Cancelled,Retentions,RET008,DH001,Cancellation Before Premium Due,Agent Forgot,No,Raised
+DH001665,PET001665,CL000193,2025-11-30,71.52,Cancelled,Customer Service,CS008,DH001,Cancellation Before Premium Due,Waiting for Information,No,Actioned
+DH001666,PET001666,CL000125,2025-11-30,24.29,Void,Retentions,RET013,DH002,Death of Pet,Agent Forgot,No,Actioned
+DH001667,PET001667,CL000062,2025-11-30,17.28,Cancelled,Customer Service,CS025,DH002,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001668,PET001668,CL000066,2025-11-30,42.68,Cancelled,Retentions,RET029,DH001,Cancellation Before Premium Due,Agent Forgot,No,Actioned
+DH001669,PET001669,CL000053,2025-11-30,44.89,Cancelled,Retentions,RET027,DH002,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001670,PET001670,CL000001,2025-11-30,9.81,Void,Retentions,RET014,DH001,Cancellation from Renewal (Void),Agent Forgot,Yes,Actioned
+DH001671,PET001671,CL000174,2025-11-30,14.65,Void,Retentions,RET011,DH001,Cancellation from Renewal (Void),Agent Forgot,No,Actioned
+DH001672,PET001672,CL000127,2025-11-30,37.81,Cancelled,Customer Service,CS020,DH001,Cancellation Before Premium Due,Payment Date Misunderstood,No,No Action
+DH001673,PET001673,CL000158,2025-11-30,40.61,Void,Customer Service,CS012,DH001,Cancellation from Renewal (Void),Payment Date Misunderstood,No,Actioned
+DH001674,PET001674,CL000192,2025-11-30,56.8,Void,Claims,CLM001,DH002,Cancellation from Renewal (Void),Refund Mailbox Delay,No,No Action
+DH001675,PET001675,CL000194,2025-11-30,43.29,Void,Claims,CLM004,DH002,Cancellation from Renewal (Void),Agent Forgot,No,No Action
+DH001676,PET001676,CL000130,2025-11-30,31.94,Cancelled,Complaints,CMP002,DH001,Death of Pet,Payment Date Misunderstood,Yes,Actioned
+DH001677,PET001677,CL000060,2025-11-30,80.26,Cancelled,Retentions,RET012,DH001,Death of Pet,Payment Date Misunderstood,Yes,Actioned
+DH001678,PET001678,CL000102,2025-11-30,3.01,Void,Retentions,RET021,DH001,Cancellation from Renewal (Void),Payment Date Misunderstood,Yes,Actioned
+DH001679,PET001679,CL000168,2025-11-30,28.48,Cancelled,Retentions,RET002,DH002,Cancellation Before Premium Due,Waiting for Information,Yes,Actioned
+DH001680,PET001680,CL000041,2025-11-30,49.91,Cancelled,Retentions,RET020,DH002,Cancellation Before Premium Due,Payment Date Misunderstood,No,No Action
+DH001681,PET001681,CL000037,2025-11-30,77.2,Cancelled,Customer Service,CS016,DH001,Cancellation Before Premium Due,Refund Mailbox Delay,No,Actioned
+DH001682,PET001682,CL000053,2025-11-30,24.93,Cancelled,Claims,CLM003,DH001,Death of Pet,Waiting for Information,No,Actioned
+DH001683,PET001683,CL000108,2025-11-30,5.57,Cancelled,Retentions,RET010,DH002,Death of Pet,Payment Date Misunderstood,Yes,Actioned
+DH001684,PET001684,CL000140,2025-11-30,37.78,Cancelled,Retentions,RET002,DH001,Cancellation Before Premium Due,Waiting for Information,Yes,No Action
+DH001685,PET001685,CL000107,2025-11-30,53.51,Cancelled,Customer Service,CS001,DH001,Death of Pet,Payment Date Misunderstood,Yes,Actioned
+DH001686,PET001686,CL000035,2025-11-30,41.92,Cancelled,Retentions,RET015,DH001,Cancellation Before Premium Due,Payment Date Misunderstood,No,Actioned
+DH001687,PET001687,CL000116,2025-11-30,13.75,Void,Customer Service,CS024,DH002,Cancellation from Renewal (Void),Agent Forgot,No,Actioned
+DH001688,PET001688,CL000007,2025-11-30,62.7,Cancelled,Customer Service,CS009,DH002,Cancellation Before Premium Due,Refund Mailbox Delay,Yes,Actioned
+DH001689,PET001689,CL000018,2025-11-30,10.26,Cancelled,Retentions,RET005,DH001,Cancellation Before Premium Due,Payment Date Misunderstood,No,No Action
+DH001690,PET001690,CL000048,2025-11-30,13.72,Cancelled,Retentions,RET030,DH002,Cancellation Before Premium Due,Payment Date Misunderstood,No,No Action
+DH001691,PET001691,CL000187,2025-11-30,3.08,Cancelled,Customer Service,CS016,DH001,Death of Pet,Agent Forgot,Yes,Actioned
+DH001692,PET001692,CL000081,2025-11-30,9.27,Void,Customer Service,CS010,DH001,Cancellation from Renewal (Void),Agent Forgot,Yes,Actioned
+DH001693,PET001693,CL000178,2025-11-30,31.61,Void,Retentions,RET019,DH001,Death of Pet,Agent Forgot,No,Actioned
+DH001694,PET001694,CL000111,2025-11-30,26.19,Cancelled,Retentions,RET020,DH002,Death of Pet,Waiting for Information,No,Actioned
+DH001695,PET001695,CL000108,2025-11-30,4.9,Cancelled,Claims,CLM009,DH002,Death of Pet,Agent Forgot,Yes,Actioned
+DH001696,PET001696,CL000143,2025-11-30,295.34,Cancelled,Retentions,RET028,DH001,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001697,PET001697,CL000136,2025-11-30,253.71,Void,Retentions,RET020,DH001,Cancellation from Renewal (Void),Waiting for Information,No,Actioned
+DH001698,PET001698,CL000069,2025-11-30,20.82,Void,Retentions,RET006,DH001,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001699,PET001699,CL000183,2025-11-30,58.42,Cancelled,Retentions,RET024,DH002,Cancellation Before Premium Due,Waiting for Information,No,Actioned
+DH001700,PET001700,CL000085,2025-11-30,2.48,Cancelled,Retentions,RET017,DH002,Death of Pet,Agent Forgot,Yes,Actioned
+DH001701,PET001701,CL000029,2025-11-30,50.18,Cancelled,Customer Service,CS003,DH001,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001702,PET001702,CL000024,2025-11-30,40.12,Cancelled,Claims,CLM003,DH002,Death of Pet,Waiting for Information,No,Actioned
+DH001703,PET001703,CL000148,2025-11-30,87.0,Void,Retentions,RET018,DH002,Death of Pet,Refund Mailbox Delay,No,Actioned
+DH001704,PET001704,CL000141,2025-11-30,50.0,Cancelled,Retentions,RET020,DH002,Cancellation Before Premium Due,Payment Date Misunderstood,No,Actioned
+DH001705,PET001705,CL000063,2025-11-30,116.51,Cancelled,Retentions,RET022,DH002,Cancellation Before Premium Due,Payment Date Misunderstood,No,Actioned
+DH001706,PET001706,CL000080,2025-11-30,10.74,Cancelled,Claims,CLM001,DH001,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001707,PET001707,CL000083,2025-11-30,32.99,Void,Retentions,RET029,DH002,Cancellation from Renewal (Void),Agent Forgot,Yes,Actioned
+DH001708,PET001708,CL000015,2025-11-30,20.69,Cancelled,Retentions,RET005,DH001,Cancellation Before Premium Due,Payment Date Misunderstood,No,Actioned
+DH001709,PET001709,CL000115,2025-11-30,40.68,Cancelled,Retentions,RET029,DH002,Death of Pet,Agent Forgot,Yes,Actioned
+DH001710,PET001710,CL000084,2025-11-30,193.52,Void,Retentions,RET007,DH002,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001711,PET001711,CL000076,2025-11-30,6.39,Cancelled,Customer Service,CS005,DH002,Death of Pet,Payment Date Misunderstood,Yes,Actioned
+DH001712,PET001712,CL000162,2025-11-30,169.2,Cancelled,Claims,CLM002,DH001,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001713,PET001713,CL000014,2025-11-30,5.83,Void,Retentions,RET024,DH001,Death of Pet,Agent Forgot,No,Actioned
+DH001714,PET001714,CL000018,2025-11-30,15.01,Void,Retentions,RET018,DH002,Death of Pet,Payment Date Misunderstood,No,No Action
+DH001715,PET001715,CL000198,2025-11-30,95.67,Void,Retentions,RET024,DH001,Cancellation from Renewal (Void),Agent Forgot,Yes,Actioned
+DH001716,PET001716,CL000113,2025-11-30,18.76,Cancelled,Retentions,RET001,DH001,Cancellation Before Premium Due,Payment Date Misunderstood,Yes,Actioned
+DH001717,PET001717,CL000191,2025-11-30,99.15,Cancelled,Retentions,RET028,DH001,Death of Pet,Refund Mailbox Delay,Yes,Raised
+DH001718,PET001718,CL000137,2025-11-30,47.61,Cancelled,Customer Service,CS005,DH002,Cancellation Before Premium Due,Payment Date Misunderstood,No,Actioned
+DH001719,PET001719,CL000101,2025-11-30,85.18,Void,Customer Service,CS013,DH001,Cancellation from Renewal (Void),Payment Date Misunderstood,Yes,No Action
+DH001720,PET001720,CL000114,2025-11-30,70.44,Void,Claims,CLM010,DH002,Death of Pet,Agent Forgot,No,Actioned
+DH001721,PET001721,CL000093,2025-11-30,4.42,Void,Claims,CLM005,DH002,Cancellation from Renewal (Void),Refund Mailbox Delay,Yes,Actioned
+DH001722,PET001722,CL000070,2025-11-30,65.39,Void,Customer Service,CS013,DH001,Cancellation from Renewal (Void),Payment Date Misunderstood,No,Actioned
+DH001723,PET001723,CL000065,2025-11-30,87.56,Cancelled,Customer Service,CS001,DH002,Cancellation Before Premium Due,Payment Date Misunderstood,No,No Action
+DH001724,PET001724,CL000197,2025-11-30,6.87,Cancelled,Customer Service,CS018,DH001,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001725,PET001725,CL000058,2025-11-30,33.47,Cancelled,Customer Service,CS006,DH001,Death of Pet,Waiting for Information,No,Raised
+DH001726,PET001726,CL000104,2025-11-30,40.97,Void,Retentions,RET002,DH001,Death of Pet,Payment Date Misunderstood,No,Actioned
+DH001727,PET001727,CL000022,2025-11-30,59.33,Void,Retentions,RET013,DH001,Death of Pet,Agent Forgot,Yes,Actioned
+DH001728,PET001728,CL000128,2025-11-30,7.28,Cancelled,Customer Service,CS002,DH001,Death of Pet,Agent Forgot,Yes,Actioned
+DH001729,PET001729,CL000152,2025-11-30,95.62,Void,Retentions,RET001,DH001,Death of Pet,Waiting for Information,Yes,Actioned
+DH001730,PET001730,CL000128,2025-11-30,79.49,Void,Retentions,RET025,DH001,Cancellation from Renewal (Void),Waiting for Information,No,Actioned
+DH001731,PET001731,CL000091,2025-11-30,80.85,Cancelled,Retentions,RET017,DH002,Death of Pet,Waiting for Information,No,Actioned
+DH001732,PET001732,CL000085,2025-11-30,96.06,Cancelled,Retentions,RET015,DH002,Death of Pet,Agent Forgot,Yes,Actioned
+DH001733,PET001733,CL000143,2025-11-30,44.69,Cancelled,Customer Service,CS025,DH002,Cancellation Before Premium Due,Payment Date Misunderstood,No,Actioned
+DH001734,PET001734,CL000107,2025-11-30,0.76,Void,Retentions,RET020,DH002,Cancellation from Renewal (Void),Payment Date Misunderstood,No,Actioned
+DH001735,PET001735,CL000195,2025-11-30,49.51,Cancelled,Retentions,RET007,DH002,Death of Pet,Payment Date Misunderstood,No,Actioned
