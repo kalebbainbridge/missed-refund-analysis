@@ -6,18 +6,45 @@ This document records the business assumptions used to generate the synthetic De
 
 ---
 
-# Root Cause Distribution
+# Baseline Root Cause Weights
 
-Estimated distribution of missed refund root causes.
+The following weights represent the starting root-cause assumptions before refund-type relationships, training, new-starter and seasonal adjustments are applied.
 
-| Root Cause | Frequency |
-|------------|----------:|
-| Payment Date Misunderstood | 55% |
-| Agent Forgot | 20% |
-| Waiting for Information | 15% |
-| Refund Mailbox Delay | 10% |
+These are generation weights rather than expected final dataset percentages.
+---
+# Simulated Business Timeline
+
+Root-cause weights change over time to model operational events.
+
+| Period | Payment Date Misunderstood | Agent Forgot | Waiting for Information | Refund Mailbox Delay |
+|---|---:|---:|---:|---:|
+| Before training: January–June 2025 | 55 | 20 | 15 | 10 |
+| After training: July 2025–February 2026 | 40 | 30 | 20 | 10 |
+| After new starters: March–June 2026 | 45 | 28 | 17 | 10 |
+
+## Training Intervention
+
+A simulated training intervention begins on **1 July 2025**. It is designed to reduce payment-date misunderstandings while redistributing the remaining root-cause weights.
+
+## New-Starters Scenario
+
+A simulated group of new starters is introduced on **1 March 2026**. Payment-date misunderstandings increase slightly to model a temporary onboarding and knowledge-development effect.
+
+## Seasonal Mailbox Workload
+
+During December and January:
+
+- the `Refund Mailbox Delay` weight increases by 8
+- the `Payment Date Misunderstood` weight decreases by 8
+
+This models additional seasonal mailbox pressure while keeping the total weighting balanced.
+
+## Additional Adjustments
+
+Refund-type adjustments are applied after the timeline and seasonal rules. The final dataset percentages will therefore differ from the base weights shown above.
 
 ---
+
 
 # Customer Contact
 
@@ -29,18 +56,6 @@ Probability that a customer has already contacted the business based on the root
 | Waiting for Information | 30% |
 | Refund Mailbox Delay | 25% |
 | Payment Date Misunderstood | 10% |
-
----
-
-# Outcome Distribution
-
-Estimated outcome after investigation.
-
-| Outcome | Frequency |
-|---------|----------:|
-| Actioned | 70% |
-| N/A | 25% |
-| Raised | 5% |
 
 ---
 

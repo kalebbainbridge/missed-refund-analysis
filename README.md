@@ -1,4 +1,4 @@
-# Missed Refund Analysis Dashboard
+# # Missed Refund Analysis and Process Improvement
 
 An end-to-end data analytics portfolio project using Python, SQL and Power BI to analyse a synthetic insurance operations dataset.
 
@@ -51,48 +51,76 @@ Key dashboard features include:
 
 Analysis of the synthetic dataset identified several operational patterns:
 
-- Most cases were successfully actioned, indicating the refund process generally functions effectively.
-- Payment Date Misunderstood was the most common root cause of missed refunds, suggesting additional training could reduce processing errors.
-- The Retentions department generated the highest number of missed refund cases due to its larger volume of policy cancellations.
-- The dashboard highlighted monthly fluctuations in case volumes, allowing operational teams to identify periods of increased workload.
-- Interactive filtering enables managers to investigate trends by month, department and refund type, supporting data-driven operational decisions.
+- The dataset contains **2,871 cases** with a combined outstanding value of **£160,215.80**.
+- Approximately **82% of reviewed cases** resulted in the analyst processing a refund, indicating substantial missed-refund exposure within the simulated workload.
+- `Payment Date Misunderstood` was the leading root cause, accounting for approximately **46% of cases**.
+- Following the simulated training intervention, payment-date misunderstandings decreased from **55.7% to 40.2%**.
+- After the simulated new starters joined, this increased to **44.2%**, demonstrating how onboarding changes could be monitored.
+- Refund mailbox delays represented **16.8% of cases during December and January**, compared with **9.5% in other months**.
+- Retentions and Customer Service generated approximately **78% of missed-refund cases**, although total cancellation volumes would be required to compare departmental error rates fairly.
+
+These findings demonstrate analytical methods using intentionally generated scenarios and do not represent the performance of a real organisation.
+
 ---
 
 ## Repository Structure
 
 ```text
-DebtHeld-MissedRefundAnalysis/
+missed-refund-analysis/
 │
 ├── dashboard/
 │   └── Missed_Refund_Analysis_Dashboard.pbix
 │
 ├── data/
-│   ├── raw/              # Synthetic monthly datasets
-│   └── reference/        # Supporting reference data
+│   ├── raw/                         # Synthetic monthly snapshots
+│   ├── reference/                   # Supporting category data
+│   └── combined_missed_refunds.csv
 │
-├── notebooks/
-│   ├── 01_generate_data.ipynb
-│   ├── 02_exploratory_analysis.ipynb
-│   ├── 03_business_analysis.ipynb
-│   └── 04_powerbi_dashboard.ipynb
+├── docs/
+│   ├── business-process.md
+│   ├── business_profile.md
+│   ├── business_questions.md
+│   ├── business_rules.md
+│   ├── data-dictionary.md
+│   ├── data_model.md
+│   ├── operational_workflow.md
+│   └── project-charter.md
 │
 ├── images/
 │   └── dashboard-overview.png
 │
-├── docs/
+├── notebooks/
+│   ├── 01_generate_powerbi_snapshot.ipynb
+│   ├── 02_validate_snapshot.ipynb
+│   ├── 03_exploratory_analysis.ipynb
+│   ├── 04_process_improvements.ipynb
+│   ├── 05_create_sql_database.ipynb
+│   └── 06_sql_business_analysis.ipynb
 │
-├── sql/
-│
-└── README.md
+├── sql/                             # Generated SQLite database location
+├── .gitignore
+├── README.md
+└── requirements.txt
 ```
+
 ---
 
-## Skills Demonstrated
+## Running the Project
+
+Install the required Python packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+
+### Skills Demonstrated
 
 This project demonstrates practical experience with:
 
 - **Python** – generating and preparing synthetic datasets
 - **Pandas** – data manipulation and transformation
+- **SQL & SQLite** – creating a reproducible database, querying operational data, using aggregation, grouping, `CASE` statements and conditional calculations
 - **Power BI** – interactive dashboard development
 - **DAX** – creating KPIs and business measures
 - **Data Visualisation** – presenting operational insights through charts and dashboards

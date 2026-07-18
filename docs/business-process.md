@@ -20,7 +20,7 @@ Agent reviews case
 Refund required?       No refund required
         │               │
         ▼               ▼
-Process refund       Mark N/A
+Process refund       Mark No Action
         │               │
         └──────┬────────┘
                ▼
@@ -47,5 +47,5 @@ Manual import relies on user and delays operations
     - Add an appropriate note if required.
     - Mark the case as Actioned in the workbook.
 9. If no further action is required:
-    - Mark the case as N/A in the workbook.
+    - Mark the case as No Action in the workbook.
 10. Move on to the next case until all assigned work has been completed. 

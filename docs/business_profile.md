@@ -20,13 +20,12 @@ The report is exported into an operational Excel workbook where agents manually 
 ## Departments
 The synthetic business contains four operational departments that can process policy cancellations.
 - Customer Service
-- Retention
+- Retentions
 - Claims
 - Complaints
 
 These departments are responsible for cancelling policies and raising refunds where applicable.
-Finance trained agents review the Debt Held cases.
-
+A small group of trained Debt Held analysts review the cases.
 ## Refund Values
 
 Typical refund values:

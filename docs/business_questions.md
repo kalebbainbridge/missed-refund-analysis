@@ -6,7 +6,7 @@
 - What is the total value of outstanding balances?
 - What is the average outstanding balance?
 - How many cases are Actioned?
-- How many cases are marked N/A?
+- A small group of trained Debt Held analysts review the cases.
 
 ## Processing
 
@@ -14,13 +14,13 @@
 
 ## Quality and Training
 
-- Which departments have the highest rate of missed refunds?
+- - Which departments account for the highest volume of missed refund cases?
 - Which agents are associated with the most cases?
 - Which patterns may indicate a need for refresher training or a process review?
 
 ## Process Improvement
 
 - What characteristics are associated with refunds remaining outstanding?
-- Does the delay between the snapshot date and workbook review affect outcomes?
+- How could weekly status tracking support future analysis of case ageing and resolution times?
 - How could the manual import and tracking process be improved? 
 

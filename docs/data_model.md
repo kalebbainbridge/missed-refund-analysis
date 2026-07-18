@@ -2,120 +2,66 @@
 
 ## Purpose
 
-This document describes the structure of the synthetic dataset used throughout the project.
+This document describes the structure and relationships of the synthetic data used in the missed-refund analysis.
 
-The aim is to recreate the Debt Held operational workflow while protecting confidential company and customer information.
+The current analytical model combines 18 monthly Power BI-style snapshots into one dataset for Python, SQLite, SQL and Power BI analysis.
 
----
+No real customer, policy, employee or company data is included.
 
-# Dataset 1 - Monthly Power BI Snapshot
+## Current Analytical Dataset
 
-This dataset represents the monthly snapshot exported from Power BI.
+**File:** `data/combined_missed_refunds.csv`  
+**SQLite table:** `missed_refunds`
 
-| Column | Type | Description |
-|---------|------|-------------|
-| Case ID | Text | Unique case identifier |
-| Policy Number | Text | Anonymised policy identifier |
-| Client Number | Text | Anonymised customer identifier |
-| Outstanding Amount | Currency | Amount outstanding |
-| Cancellation Status | Category | Cancelled / Void |
-| Cancelling Department | Category | Department that cancelled the policy |
-| Cancelling Agent | Category | Agent who cancelled the policy |
+### Data Grain
 
----
+Each row represents one unique missed-refund case identified within one monthly snapshot.
 
-## Cancelling department
-- Retentions
-- Customer Service
-- Claims
-- Complaints
+`Case ID` is the unique identifier for each case.
 
----
+The dataset currently contains:
 
+- 18 monthly snapshots
+- 2,871 unique cases
+- reporting dates from January 2025 to June 2026
 
-# Dataset 2 - Operational Tracker
+## Dataset Components
 
-This dataset represents the Excel workbook used by agents.
+The dataset contains three main groups of information:
 
-| Column | Type | Description |
-|---------|------|-------------|
-| Case ID | Text | Links to snapshot |
-| Agent Working | Text | Agent currently working the case |
-| Outcome | Category | Actioned / N/A / Raised |
-| Comments | Text | Operational notes |
-| Refund Processed Date | Date | Date refund completed |
-|Customer Chased | Category | Has the customer contacted the business to chase a refund (y/n) |
-| Root Cause | Category | Reason the refund appeared on the report |
+1. **Case identifiers**  
+   Case, policy and client identifiers.
 
----
-## Root Cause Categories
-- Agent oversight
-- Business Rule misunderstanding
-- Refund mailbox delay
-- awaiting additional information
+2. **Cancellation context**  
+   Snapshot date, cancellation status, cancelling department, cancelling agent, refund type and outstanding amount.
 
----
-## Processing Agent Assumptions
-- Only a small number of agents are trained to work the Debt Held workbook
-- The agents working the workbook may change each month
-- Work is not divided equally as agents may not be allocated the same amount of time on the workbool
-- Cases remain unassigned until an agent begins reviewing them 
-- Synthetic agent labels will be used
----
-## Outcome Categories
-### Actioned 
-The case has been reviewed and the agent workng the workbook has processed the refund.
-### NA
-The case does not reqire furter action
-Examples include: 
-- No refund due 
-- Refund already processed before review
+3. **Investigation result**  
+   Reviewing analyst, root cause, customer-contact status and case outcome.
 
+## Data Relationships
 
+- One `Client Number` may be associated with multiple `Policy Number` values.
+- Each generated `Policy Number` is associated with one `Case ID` in the current dataset.
+- Each `Case ID` belongs to one monthly `Snapshot Date`.
+- Each `Cancelling Agent` belongs to one `Cancelling Department`.
+- Each case is reviewed by one synthetic `Agent Working`.
+- Refund type influences cancellation status, root cause and outcome within the generation rules.
 
-# Calculated Fields
+## Modelled Business Rules
 
-These fields will be created during the analysis.
+- `Cancellation from Renewal (Void)` cases always have a cancellation status of `Void`.
+- `Cancellation Before Premium Due` cases always have a cancellation status of `Cancelled`.
+- `Death of Pet` cases may be either `Cancelled` or `Void`.
+- Outstanding amounts range from £0.50 to approximately £300.
+- A case has one root cause and one outcome.
+- A case may indicate that the customer had already contacted the business.
+ business.
+- All case IDs and policy numbers are unique within the current dataset.
 
-| Field | Description |
-|-------|-------------|
-| Days Outstanding | Number of days between snapshot and completion |
-| Refund Required | Yes / No |
-| Refund Missed | Yes / No |
-| Root Cause | Primary reason the case appeared on the report.
+## Planned Operational Extension
 
----
+The next project phase will introduce a weekly case-status dataset.
 
-# Business Rules
+Unlike the current dataset, a case may appear on multiple weekly reporting dates while it remains unresolved. The combination of `Case ID` and `Reporting Date` will uniquely identify each weekly status record.
 
-- Each case ID must be unique 
-- Outstanding amount must be greater than £0
-- Some outstanding balances do not require a refund 
-- One client may hold more than one policy
-- Each policy belongs to one client
-- A client number may therefore appear against multiple policy numbers
-
-
----
-
-# Assumptions
-Because this project uses synthetic data, several realisti assumptions have been made to recreate the operational process.
-- Outstanstanding refund values range from £0.50 to approximately £300
-- Most refund values fall between £5 and £150
-- The workbook is typically worked by 1 to 2 agents.
-- Cases may have already been resolved if the customer contacted the business before the monthly workbook was reviewed.
-- Not every outstanding balance results in a refund
-
-## Root Cause Distribution
-
-Based on operational experience, the estimated distribution of root causes is:
-
-| Root Cause | Estimated Frequency |
-|------------|--------------------:|
-| Payment Date Misunderstood | 55% |
-| Agent Forgot | 20% |
-| Waiting for Information | 15% |
-| Refund Mailbox Delay | 10% |
-
-These percentages are based on business knowledge and are used to generate realistic synthetic data.
-
+The detailed design is documented in `operational_workflow.md`.

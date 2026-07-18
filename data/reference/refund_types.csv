@@ -1,5 +1,4 @@
-| Refund Type ID | Refund Type                      |
-| -------------- | -------------------------------- |
-| RT001          | Cancellation Before Premium Due  |
-| RT002          | Cancellation from Renewal (Void) |
-| RT003          | Death of Pet                     |
+Refund Type ID,Refund Type
+RT001,Cancellation Before Premium Due
+RT002,Cancellation from Renewal (Void)
+RT003,Death of Pet                  |
