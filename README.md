@@ -27,6 +27,7 @@ This project investigates the operational process using synthetic data to answer
 - Analyse refund processing performance
 - Build an interactive Power BI dashboard
 - Recommend improvements to the process
+- Design a refresh-safe data model that preserves agent notes and operational updates
 
 ---
 
@@ -96,7 +97,8 @@ missed-refund-analysis/
 │   ├── 04_process_improvements.ipynb
 │   ├── 05_create_sql_database.ipynb
 │   └── 06_sql_business_analysis.ipynb
-│   └── 07_generate_weekly_status_feed.ipynb
+│   ├── 07_generate_weekly_status_feed.ipynb
+│   └── 08_create_refresh_safe_tables.ipynb
 │
 ├── sql/                             # Generated SQLite database location
 ├── .gitignore
@@ -114,7 +116,7 @@ Install the required Python packages:
 pip install -r requirements.txt
 ```
 
-Run the notebooks in numerical order. Notebook 05 creates the local SQLite database required by notebook 06, and notebook 07 generates the weekly operational datasets.
+Run the notebooks in numerical order. Notebook 05 creates the local SQLite database, notebook 07 generates the weekly operational datasets, and notebook 08 creates the refresh-safe source, agent-update and reporting-view structure.
 
 The SQLite database and weekly CSV files can be regenerated from the notebooks.
 
