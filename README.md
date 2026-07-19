@@ -1,4 +1,4 @@
-# # Missed Refund Analysis and Process Improvement
+# Missed Refund Analysis and Process Improvement
 
 An end-to-end data analytics portfolio project using Python, SQL and Power BI to analyse a synthetic insurance operations dataset.
 
@@ -74,8 +74,8 @@ missed-refund-analysis/
 ├── data/
 │   ├── raw/                         # Synthetic monthly snapshots
 │   ├── reference/                   # Supporting category data
+│   ├── weekly/                      # Generated weekly operational data
 │   └── combined_missed_refunds.csv
-│
 ├── docs/
 │   ├── business-process.md
 │   ├── business_profile.md
@@ -96,6 +96,7 @@ missed-refund-analysis/
 │   ├── 04_process_improvements.ipynb
 │   ├── 05_create_sql_database.ipynb
 │   └── 06_sql_business_analysis.ipynb
+│   └── 07_generate_weekly_status_feed.ipynb
 │
 ├── sql/                             # Generated SQLite database location
 ├── .gitignore
@@ -113,8 +114,11 @@ Install the required Python packages:
 pip install -r requirements.txt
 ```
 
+Run the notebooks in numerical order. Notebook 05 creates the local SQLite database required by notebook 06, and notebook 07 generates the weekly operational datasets.
 
-### Skills Demonstrated
+The SQLite database and weekly CSV files can be regenerated from the notebooks.
+
+## Skills Demonstrated
 
 This project demonstrates practical experience with:
 

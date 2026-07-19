@@ -55,13 +55,39 @@ The dataset contains three main groups of information:
 - Outstanding amounts range from £0.50 to approximately £300.
 - A case has one root cause and one outcome.
 - A case may indicate that the customer had already contacted the business.
- business.
 - All case IDs and policy numbers are unique within the current dataset.
 
-## Planned Operational Extension
+## Weekly Operational Dataset
 
-The next project phase will introduce a weekly case-status dataset.
+**Detailed file:** `data/weekly/weekly_case_status.csv`
 
-Unlike the current dataset, a case may appear on multiple weekly reporting dates while it remains unresolved. The combination of `Case ID` and `Reporting Date` will uniquely identify each weekly status record.
+**Summary file:** `data/weekly/weekly_operational_summary.csv`
 
-The detailed design is documented in `operational_workflow.md`.
+The weekly dataset records how missed-refund cases change over time.
+
+### Weekly Data Grain
+
+Each detailed row represents one case on one Friday reporting date.
+
+The combination of `Case ID` and `Reporting Date` uniquely identifies each weekly record.
+
+A case may appear across multiple reporting weeks while unresolved. It appears as `Completed` during its completion week and is excluded from later snapshots.
+
+### Relationship to Source Data
+
+`Case ID` links the weekly operational data to the source analytical dataset.
+
+The weekly feed contains the core workbook fields required for operational use. Additional attributes such as cancelling department, cancelling agent, refund type and root cause remain available from the source table.
+
+### Weekly Summary Grain
+
+Each row in `weekly_operational_summary.csv` represents one Friday reporting date and summarises:
+
+- new cases
+- processing capacity
+- cases reviewed and completed
+- new dependencies
+- open and dependency backlogs
+- total unresolved backlog
+
+The detailed operational design and simulation assumptions are documented in `operational_workflow.md`.

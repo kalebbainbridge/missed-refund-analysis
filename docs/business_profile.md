@@ -25,7 +25,7 @@ The synthetic business contains four operational departments that can process po
 - Complaints
 
 These departments are responsible for cancelling policies and raising refunds where applicable.
-A small group of trained Debt Held analysts review the cases.
+A small group of trained Debt Held agents review the cases.
 ## Refund Values
 
 Typical refund values:

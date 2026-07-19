@@ -11,6 +11,14 @@ This document records the business assumptions used to generate the synthetic De
 The following weights represent the starting root-cause assumptions before refund-type relationships, training, new-starter and seasonal adjustments are applied.
 
 These are generation weights rather than expected final dataset percentages.
+
+| Root Cause | Baseline Weight |
+|---|---:|
+| Payment Date Misunderstood | 55 |
+| Agent Forgot | 20 |
+| Waiting for Information | 15 |
+| Refund Mailbox Delay | 10 |
+
 ---
 # Simulated Business Timeline
 
@@ -126,12 +134,12 @@ The synthetic data should reflect the following operational patterns:
 
 - Death of Pet cancellations are most commonly associated with Payment Date Misunderstood.
 - Cancellation from Renewal (Void) cases are most commonly associated with Agent Forgot.
-- Cancellation Before Premium Due cases are more likely to result in an N/A outcome because the source system may not always distinguish between the cancellation date and the final day of cover.
+- Cancellation Before Premium Due cases are more likely to result in an No Action outcome because the source system may not always distinguish between the cancellation date and the final day of cover.
 - Refund Type, Root Cause and Outcome should therefore not be generated independently.
 
 ## Outcome by Refund Type
 
-| Refund Type | Actioned | N/A | Raised |
+| Refund Type | Actioned | No Action | Raised |
 |-------------|---------:|----:|-------:|
 | Death of Pet | 95% | 4% | 1% |
 | Cancellation Before Premium Due | 65% | 32% | 3% |
