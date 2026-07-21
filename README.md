@@ -77,6 +77,10 @@ missed-refund-analysis/
 │   ├── reference/                   # Supporting category data
 │   ├── weekly/                      # Generated weekly operational data
 │   └── combined_missed_refunds.csv
+│   ├── operational/
+│   │   ├── agent_case_workbook.xlsx
+│   │   ├── agent_updates.csv
+│   │   └── source_cases.csv
 ├── docs/
 │   ├── business-process.md
 │   ├── business_profile.md
@@ -96,9 +100,10 @@ missed-refund-analysis/
 │   ├── 03_exploratory_analysis.ipynb
 │   ├── 04_process_improvements.ipynb
 │   ├── 05_create_sql_database.ipynb
-│   └── 06_sql_business_analysis.ipynb
+│   ├── 06_sql_business_analysis.ipynb
 │   ├── 07_generate_weekly_status_feed.ipynb
-│   └── 08_create_refresh_safe_tables.ipynb
+│   ├── 08_create_refresh_safe_tables.ipynb
+│   └── 09_create_agent_workbook.ipynb
 │
 ├── sql/                             # Generated SQLite database location
 ├── .gitignore
@@ -160,3 +165,17 @@ This project was inspired by a genuine operational process encountered in an ins
 To protect customer privacy and confidential business information, all data used in this repository is synthetically generated using documented business rules and operational assumptions.
 
 The aim is to demonstrate analytical thinking, data modelling and reporting techniques rather than reproduce production data.
+
+## Refresh-Safe Agent Workbook
+
+The project includes a simulated Excel workbook for agents reviewing missed-refund cases.
+
+Fresh source data is kept separate from persistent agent updates. Notebook `09_create_agent_workbook.ipynb` merges them by `Case ID`, preserves existing workbook edits and synchronises agent-entered values back to the update table.
+
+The workbook includes:
+
+- essential policy, client, balance and cancellation information
+- visually highlighted editable fields
+- controlled dropdown lists for agents, statuses and outcomes
+- automatic completion ownership and dates
+- protection against source refreshes overwriting agent notesdon

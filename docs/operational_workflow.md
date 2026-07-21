@@ -324,3 +324,18 @@ Agents reviewing cases do not need to see all analytical source fields. Their wo
 `Case ID` links the static source case data to the weekly operational feed.
 
 This prevents static case details from being duplicated in every weekly record while allowing Power BI and SQL to analyse operational performance by department, refund type and root cause.
+
+## Refresh-Safe Agent Workflow
+
+The operational workbook separates refreshable source fields from persistent agent-entered fields.
+
+1. Notebook 08 refreshes `source_cases.csv` and maintains `agent_updates.csv`.
+2. Notebook 09 reads any existing edits from `agent_case_workbook.xlsx`.
+3. Editable values are synchronised back to `agent_updates.csv`.
+4. Fresh source fields and preserved updates are merged by `Case ID`.
+5. The formatted agent workbook is rebuilt.
+6. Power Query merges the source and update tables for operational reporting.
+
+Agents work only with the combined Excel workbook. They do not need to edit the source table or system-maintained completion fields directly.
+
+The workbook must be saved and closed before the refresh notebook runs.
