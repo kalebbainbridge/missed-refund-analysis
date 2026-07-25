@@ -103,7 +103,9 @@ missed-refund-analysis/
 │   ├── 06_sql_business_analysis.ipynb
 │   ├── 07_generate_weekly_status_feed.ipynb
 │   ├── 08_create_refresh_safe_tables.ipynb
-│   └── 09_create_agent_workbook.ipynb
+│   ├── 09_create_agent_workbook.ipynb
+|   ├── 10_auto_check_processed_refunds.ipynb
+|   
 │
 ├── sql/                             # Generated SQLite database location
 ├── .gitignore
