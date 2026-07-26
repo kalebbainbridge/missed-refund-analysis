@@ -1,6 +1,6 @@
 # Missed Refund Analysis and Process Improvement
 
-An end-to-end data analytics portfolio project using Python, SQL and Power BI to analyse a synthetic insurance operations dataset.
+An end-to-end data and process-improvement portfolio project using Python, Pandas, SQLite, SQL, Excel, Power Query, Power BI and Streamlit to analyse and improve a synthetic insurance operations workflow.
 
 ## Overview
 
@@ -28,6 +28,31 @@ This project investigates the operational process using synthetic data to answer
 - Build an interactive Power BI dashboard
 - Recommend improvements to the process
 - Design a refresh-safe data model that preserves agent notes and operational updates
+- Automate checks for refunds already processed
+- Build a working shared operational and agent workflow prototype
+
+---
+## Working Workflow Prototype
+
+A working Streamlit prototype demonstrates how the missed-refund process could move from a static Power BI export and shared Excel workbook to a controlled SQLite-backed workflow.
+
+The prototype provides two connected interfaces:
+
+- **Operational Control** — monitors open cases, dependencies, completed cases and the workflow audit trail.
+- **Agent Case Review** — allows agents to find, assign, investigate, refer and complete cases through a shared queue.
+
+The workflow includes:
+
+- shared case assignment
+- agent notes
+- controlled final outcomes
+- senior-review and other-department dependencies
+- automated accounting-check results
+- completed-case tracking
+- timestamped workflow events
+- protection against conflicting updates
+
+The application uses entirely synthetic data and simulates authentication through agent selection.
 
 ---
 
@@ -53,7 +78,7 @@ Key dashboard features include:
 Analysis of the synthetic dataset identified several operational patterns:
 
 - The dataset contains **2,871 cases** with a combined outstanding value of **£160,215.80**.
-- Approximately **82% of reviewed cases** resulted in the analyst processing a refund, indicating substantial missed-refund exposure within the simulated workload.
+- Approximately **82% of reviewed cases** resulted in the agent processing a refund, indicating substantial missed-refund exposure within the simulated workload.
 - `Payment Date Misunderstood` was the leading root cause, accounting for approximately **46% of cases**.
 - Following the simulated training intervention, payment-date misunderstandings decreased from **55.7% to 40.2%**.
 - After the simulated new starters joined, this increased to **44.2%**, demonstrating how onboarding changes could be monitored.
@@ -69,18 +94,28 @@ These findings demonstrate analytical methods using intentionally generated scen
 ```text
 missed-refund-analysis/
 │
+├── app/
+│   ├── Operational_Control.py
+│   ├── init_database.py
+│   └── pages/
+│       └── 1_Agent_Case_Review.py
+│
 ├── dashboard/
 │   └── Missed_Refund_Analysis_Dashboard.pbix
 │
 ├── data/
-│   ├── raw/                         # Synthetic monthly snapshots
-│   ├── reference/                   # Supporting category data
-│   ├── weekly/                      # Generated weekly operational data
-│   └── combined_missed_refunds.csv
+│   ├── accounting/
+│   │   ├── automated_refund_check_results.csv
+│   │   └── refund_transactions.csv
 │   ├── operational/
 │   │   ├── agent_case_workbook.xlsx
 │   │   ├── agent_updates.csv
 │   │   └── source_cases.csv
+│   ├── raw/                         # Synthetic monthly snapshots
+│   ├── reference/                   # Supporting category data
+│   ├── weekly/                      # Weekly operational simulation
+│   └── combined_missed_refunds.csv
+│
 ├── docs/
 │   ├── business-process.md
 │   ├── business_profile.md
@@ -104,10 +139,9 @@ missed-refund-analysis/
 │   ├── 07_generate_weekly_status_feed.ipynb
 │   ├── 08_create_refresh_safe_tables.ipynb
 │   ├── 09_create_agent_workbook.ipynb
-|   ├── 10_auto_check_processed_refunds.ipynb
-|   
+│   └── 10_auto_check_processed_refunds.ipynb
 │
-├── sql/                             # Generated SQLite database location
+├── sql/                             # Generated analytical SQLite database
 ├── .gitignore
 ├── README.md
 └── requirements.txt
@@ -117,15 +151,58 @@ missed-refund-analysis/
 
 ## Running the Project
 
-Install the required Python packages:
+### Install the dependencies
 
-```bash
-pip install -r requirements.txt
+Create and activate a virtual environment, then install the required packages:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
 ```
 
-Run the notebooks in numerical order. Notebook 05 creates the local SQLite database, notebook 07 generates the weekly operational datasets, and notebook 08 creates the refresh-safe source, agent-update and reporting-view structure.
+### Initialise the workflow prototype
 
-The SQLite database and weekly CSV files can be regenerated from the notebooks.
+Build the local SQLite prototype database from the synthetic CSV files:
+
+```powershell
+python app/init_database.py
+```
+
+This creates:
+
+```text
+data/prototype/missed_refunds_prototype.db
+```
+
+Running the initialisation script again resets prototype case activity and the workflow audit trail.
+
+### Launch the Streamlit application
+
+```powershell
+python -m streamlit run app/Operational_Control.py
+```
+
+The application provides:
+
+- an Operational Control page for backlog, dependency, completion and audit monitoring
+- an Agent Case Review page for shared case assignment and processing
+
+Agent selection simulates authentication. All displayed information is synthetic.
+
+### Run the analytical notebooks
+
+Start Jupyter from the notebooks directory:
+
+```powershell
+cd notebooks
+python -m jupyterlab
+```
+
+Run the notebooks in numerical order. They generate and validate the synthetic source data, analytical outputs, weekly operational feeds, refresh-safe tables, agent workbook and automated accounting checks.
+
+---
+
 
 ## Skills Demonstrated
 
@@ -180,4 +257,4 @@ The workbook includes:
 - visually highlighted editable fields
 - controlled dropdown lists for agents, statuses and outcomes
 - automatic completion ownership and dates
-- protection against source refreshes overwriting agent notesdon
+- protection against source refreshes overwriting agent notes

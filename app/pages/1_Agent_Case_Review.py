@@ -131,12 +131,45 @@ if queue_view == "My assigned cases":
     filtered_queue = assigned_to_agent.copy()
 else:
     filtered_queue = unassigned_cases.copy()
+if search_value.strip():
+    search_term = search_value.strip().lower()
 
-st.subheader("Available case queue")
+    search_mask = (
+        filtered_queue["Case ID"]
+        .astype(str)
+        .str.lower()
+        .str.contains(search_term, regex=False)
+        |
+        filtered_queue["Policy Number"]
+        .astype(str)
+        .str.lower()
+        .str.contains(search_term, regex=False)
+        |
+        filtered_queue["Client Number"]
+        .astype(str)
+        .str.lower()
+        .str.contains(search_term, regex=False)
+    )
+    filtered_queue = filtered_queue.loc[
+        search_mask
+    ].copy()
+
+if selected_check_result != "All":
+    filtered_queue = filtered_queue.loc[
+        filtered_queue["Automated Check Result"]
+        .eq(selected_check_result)
+    ].copy()
+
+if queue_view == "My assigned cases":
+    queue_heading = "My assigned case queue"
+else:
+    queue_heading = "Available case queue"
+
+st.subheader(queue_heading)
 
 st.caption(
-    f"{len(filtered_queue):,} cases shown "
-    f"from {len(agent_queue):,} available cases."
+    f"{len(filtered_queue):,} cases match "
+    "the current queue and filters."
 )
 filtered_queue = filtered_queue.reset_index(drop=True)
 
@@ -542,7 +575,12 @@ if selected_case_id:
                         "The case could not be completed. "
                         "It may have changed."
                     )
-    if st.button("Remove assignment"):
+
+        if (
+            not case_is_unassigned
+            and current_assignment == selected_agent
+            and st.button("Remove assignment")
+        ):
             with sqlite3.connect(DATABASE_PATH) as connection:
                 update_result = connection.execute(
                     """
@@ -583,10 +621,10 @@ if selected_case_id:
                         ),
                     )
 
-            if update_result.rowcount == 1:
-                st.rerun()
-            else:
-                st.error(
-                    "The assignment could not be removed. "
-                    "The case may have changed."
-                )
+                if update_result.rowcount == 1:
+                    st.rerun()
+                else:
+                    st.error(
+                        "The assignment could not be removed. "
+                        "The case may have changed."
+                    )

@@ -18,3 +18,5 @@ venv/
 
 # SQLite browser project files
 *.sqbpro
+# Temporary repair backups
+data/operational/*_before_*_repair.csv

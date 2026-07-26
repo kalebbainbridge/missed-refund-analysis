@@ -62,8 +62,6 @@ with sqlite3.connect(DATABASE_PATH) as connection:
 
 st.subheader("Current operational position")
 
-column_1, column_2, column_3, column_4 = st.columns(4)
-
 column_1, column_2, column_3, column_4, column_5 = (
     st.columns(5)
 )
@@ -119,7 +117,7 @@ st.caption(
 
 st.dataframe(
     open_cases,
-    use_container_width=True,
+    width="stretch",
     hide_index=True,
     column_config={
         "Outstanding Amount": st.column_config.NumberColumn(
@@ -158,7 +156,7 @@ st.caption(
 
 st.dataframe(
     dependency_cases,
-    use_container_width=True,
+    width="stretch",
     hide_index=True,
     column_config={
         "Outstanding Amount": st.column_config.NumberColumn(

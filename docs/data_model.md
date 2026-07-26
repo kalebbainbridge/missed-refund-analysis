@@ -36,7 +36,7 @@ The dataset contains three main groups of information:
    Snapshot date, cancellation status, cancelling department, cancelling agent, refund type and outstanding amount.
 
 3. **Investigation result**  
-   Reviewing analyst, root cause, customer-contact status and case outcome.
+   Reviewing agent, root cause, customer-contact status and case outcome.
 
 ## Data Relationships
 
@@ -94,7 +94,7 @@ The detailed operational design and simulation assumptions are documented in `op
 
 ## Refresh-Safe Operational Model
 
-The operational workbook will separate source-controlled case data from agent-maintained updates.
+The operational model separates source-controlled case data from agent-maintained updates.
 
 This prevents a source-data refresh from overwriting agent notes, outcomes or completion information.
 
@@ -219,3 +219,55 @@ When an agent record changes:
 - completed cases require both an agent and a final outcome
 
 The workbook uses filters, frozen headings, currency formatting and controlled dropdown lists. Source fields remain visually separate from the pale-yellow editable fields.
+
+## Automated Accounting Check
+
+**Notebook:** `notebooks/10_auto_check_processed_refunds.ipynb`
+
+**Accounting feed:** `data/accounting/refund_transactions.csv`
+
+**Audit results:** `data/accounting/automated_refund_check_results.csv`
+
+The accounting feed has a grain of one row per refund transaction. Transactions are matched to operational cases using both `Policy Number` and `Client Number`.
+
+A case can be completed automatically only when:
+
+- it has not been completed manually
+- the policy and client numbers match
+- the refund amount equals the outstanding amount
+- the refund was processed after the snapshot date
+- the refund was processed on or before the accounting extract date
+- exactly one valid transaction matches the case
+
+Cases with no transaction, an amount mismatch, a pre-snapshot transaction or multiple valid matches remain available for agent review.
+
+Confirmed unique matches are recorded as:
+
+- `Case Status`: `Completed`
+- `Final Outcome`: `Refund Already Processed`
+- `Completed By`: `Automated Check`
+- `Completion Date`: accounting refund processed date
+
+The audit-results table retains the decision, matching counts and confirmed transaction details for reporting and control purposes.
+
+## Workflow Prototype Database
+
+**Initialisation script:** `app/init_database.py`
+
+**Generated database:** `data/prototype/missed_refunds_prototype.db`
+
+The generated SQLite prototype contains:
+
+| Object | Purpose |
+|---|---|
+| `source_cases` | Refreshable case attributes from the synthetic source data. |
+| `agent_updates` | Persistent assignment, notes, status and completion fields. |
+| `automated_check_results` | Case-level outcomes from the automated accounting check. |
+| `operational_case_view` | Combined reporting view joining the three data sources by `Case ID`. |
+| `workflow_events` | Timestamped audit history for assignment, notes, dependencies and completion actions. |
+
+The Streamlit application reads and updates the SQLite database rather than editing the source CSV files directly.
+
+Conditional SQL updates protect cases from conflicting changes. For example, an agent can assign a case only when it is still open and unassigned.
+
+Running `app/init_database.py` rebuilds the prototype from the controlled CSV inputs and resets the `workflow_events` table. This provides a clean, reproducible demonstration environment.

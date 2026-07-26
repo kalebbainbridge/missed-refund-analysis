@@ -282,49 +282,6 @@ The weekly feed intentionally repeats the four core workbook fields so that each
 
 This design allows Power BI and SQL to analyse backlog and completion performance without displaying unnecessary analytical fields in the agents’ working view.
 
-### Source Case Data
-
-The source data contains the static case attributes used for analysis, including:
-
-- Case ID
-- Policy Number
-- Client Number
-- Source Snapshot Date
-- Outstanding Amount
-- Cancellation Status
-- Cancelling Department
-- Cancelling Agent
-- Refund Type
-- Root Cause
-
-These fields remain stored in the SQLite `missed_refunds` table.
-
-### Operational Weekly Feed
-
-The operational feed records how cases change over time. It contains:
-
-- Case ID
-- Policy Number
-- Client Number
-- Reporting Date
-- Outstanding Amount
-- Date Added
-- Case Status
-- Completion Date
-- Completed By
-- Final Outcome
-- Case Age Days
-
-### Agent Workbook View
-
-Agents reviewing cases do not need to see all analytical source fields. Their working view contains only the information required to locate, investigate and update a case.
-
-### Reporting Relationship
-
-`Case ID` links the static source case data to the weekly operational feed.
-
-This prevents static case details from being duplicated in every weekly record while allowing Power BI and SQL to analyse operational performance by department, refund type and root cause.
-
 ## Refresh-Safe Agent Workflow
 
 The operational workbook separates refreshable source fields from persistent agent-entered fields.
@@ -339,3 +296,54 @@ The operational workbook separates refreshable source fields from persistent age
 Agents work only with the combined Excel workbook. They do not need to edit the source table or system-maintained completion fields directly.
 
 The workbook must be saved and closed before the refresh notebook runs.
+
+## Shared Streamlit Workflow Prototype
+
+The Streamlit prototype demonstrates a possible replacement for the static export-and-shared-workbook process.
+
+### Operational Control
+
+The Operational Control page provides:
+
+- total-case and current-backlog measures
+- dependency monitoring
+- completed-case reporting
+- automated-completion totals
+- open and dependency queues
+- dependency resolution controls
+- a timestamped workflow audit trail
+
+### Agent Case Review
+
+The Agent Case Review page allows a simulated authenticated agent to:
+
+- search by case, policy or client identifier
+- filter cases by automated accounting-check result
+- view available and personally assigned queues
+- assign an unassigned case
+- review source and accounting information
+- save investigation notes
+- refer a case for senior review or another department
+- complete a case using a controlled final outcome
+- remove an assignment and return the case to the shared queue
+
+### Concurrency Controls
+
+Assignment and workflow actions use conditional SQLite updates.
+
+A case can be assigned only when it remains open and unassigned. Subsequent actions require the case to remain open and assigned to the selected agent.
+
+If another user changes the record first, the conditional update affects no rows and the application displays an error instead of overwriting the newer state.
+
+### Audit Events
+
+The `workflow_events` table records:
+
+- case assignment
+- assignment removal
+- note updates
+- dependency referral
+- dependency resolution
+- case completion
+
+Each event retains the case, event type, previous and new statuses, responsible agent or operational role, timestamp and supporting notes.

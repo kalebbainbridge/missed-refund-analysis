@@ -26,6 +26,10 @@ DATABASE_PATH = (
     / "prototype"
     / "missed_refunds_prototype.db"
 )
+DATABASE_PATH.parent.mkdir(
+    parents=True,
+    exist_ok=True,
+)
 
 print("Project root:", PROJECT_ROOT)
 print("Prototype database:", DATABASE_PATH)
