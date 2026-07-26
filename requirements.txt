@@ -3,3 +3,4 @@ matplotlib
 numpy
 pandas
 openpyxl
+streamlit==1.60.0
