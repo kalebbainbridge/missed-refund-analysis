@@ -287,11 +287,13 @@ This design allows Power BI and SQL to analyse backlog and completion performanc
 The operational workbook separates refreshable source fields from persistent agent-entered fields.
 
 1. Notebook 08 refreshes `source_cases.csv` and maintains `agent_updates.csv`.
-2. Notebook 09 reads any existing edits from `agent_case_workbook.xlsx`.
-3. Editable values are synchronised back to `agent_updates.csv`.
-4. Fresh source fields and preserved updates are merged by `Case ID`.
-5. The formatted agent workbook is rebuilt.
-6. Power Query merges the source and update tables for operational reporting.
+2. Notebook 09 reads permitted agent edits from `agent_case_workbook.xlsx`.
+3. Agent-entered values are synchronised back to `agent_updates.csv`.
+4. Notebook 10 checks the accounting extract and writes confirmed automated completions to the persistent backend.
+5. Notebook 09 is rerun to rebuild the workbook with the automated results.
+6. Records completed by `Automated Check` remain backend controlled and cannot be overwritten by older workbook values.
+7. Fresh source fields and protected persistent updates are merged by `Case ID`.
+8. Power Query merges the source and update tables for operational reporting.
 
 Agents work only with the combined Excel workbook. They do not need to edit the source table or system-maintained completion fields directly.
 

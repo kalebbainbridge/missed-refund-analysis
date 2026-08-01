@@ -205,7 +205,7 @@ The workbook contains only the information agents need to review cases:
 - Case Status
 - Final Outcome
 
-Source-controlled fields are refreshed from `source_cases.csv`. Agent-entered fields are preserved from the existing workbook and synchronised back to `agent_updates.csv`.
+Source-controlled fields are refreshed from `source_cases.csv`. Permitted agent-entered fields are preserved from the existing workbook and synchronised back to `agent_updates.csv`. Records completed by `Automated Check` remain controlled by the persistent backend.
 
 ### Refresh Protection
 
@@ -216,7 +216,8 @@ When an agent record changes:
 - `Last Updated Date` is set automatically
 - `Completed By` is populated from `Agent Working` when a case is completed
 - `Completion Date` is populated automatically
-- completed cases require both an agent and a final outcome
+- cases completed by an agent require an agent assignment and a final outcome
+- automated completions require a final outcome but do not require an agent assignment
 
 The workbook uses filters, frozen headings, currency formatting and controlled dropdown lists. Source fields remain visually separate from the pale-yellow editable fields.
 

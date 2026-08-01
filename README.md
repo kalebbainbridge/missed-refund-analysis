@@ -199,7 +199,9 @@ cd notebooks
 python -m jupyterlab
 ```
 
-Run the notebooks in numerical order. They generate and validate the synthetic source data, analytical outputs, weekly operational feeds, refresh-safe tables, agent workbook and automated accounting checks.
+Run notebooks 01–10 in numerical order. They generate and validate the synthetic source data, analytical outputs, weekly operational feeds, refresh-safe tables, agent workbook and automated accounting checks.
+
+Notebook 10 updates the persistent backend after the initial workbook is created. Rerun Notebook 09 after Notebook 10 so the Excel workbook reflects the automated completions. Notebook 09 protects backend-controlled automated records from being overwritten by older workbook values.
 
 ---
 
