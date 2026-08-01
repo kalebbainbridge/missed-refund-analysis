@@ -56,6 +56,16 @@ The application uses entirely synthetic data and simulates authentication throug
 
 ---
 
+### Operational Control
+
+![Operational Control prototype](images/prototype-operational-control.png)
+
+### Agent Case Review
+
+![Agent Case Review prototype](images/prototype-agent-case-review.png)
+
+---
+
 ## Dashboard Preview
 
 ![Missed Refund Dashboard](images/dashboard-overview.png)
