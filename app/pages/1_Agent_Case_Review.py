@@ -20,6 +20,15 @@ DATABASE_PATH = (
     / "missed_refunds_prototype.db"
 )
 
+if not DATABASE_PATH.exists():
+    st.error(
+        "The prototype database has not been initialised."
+    )
+    st.code(
+        "python app/init_database.py",
+        language="powershell",
+    )
+    st.stop()
 AGENTS = ["DH001", "DH002"]
 
 st.title("Agent Case Review")

@@ -29,6 +29,16 @@ DATABASE_PATH = (
     / "prototype"
     / "missed_refunds_prototype.db"
 )
+
+if not DATABASE_PATH.exists():
+    st.error(
+        "The prototype database has not been initialised."
+    )
+    st.code(
+        "python app/init_database.py",
+        language="powershell",
+    )
+    st.stop()
 with sqlite3.connect(DATABASE_PATH) as connection:
     case_summary = pd.read_sql_query(
         """
