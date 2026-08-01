@@ -621,10 +621,10 @@ if selected_case_id:
                         ),
                     )
 
-                if update_result.rowcount == 1:
-                    st.rerun()
-                else:
-                    st.error(
-                        "The assignment could not be removed. "
-                        "The case may have changed."
-                    )
+            if update_result.rowcount == 1:
+                st.rerun()
+            else:
+                st.error(
+                    "The assignment could not be removed. "
+                    "The case may have changed."
+                )
