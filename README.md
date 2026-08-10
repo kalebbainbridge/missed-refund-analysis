@@ -12,6 +12,26 @@ No real customer or company data is used in this project.
 
 ---
 
+## Project at a Glance
+
+- Analysed **2,871 synthetic missed-refund cases** representing **£160,215.80** in outstanding balances.
+- Used **Python, Pandas, SQLite and SQL** to validate data and investigate departments, root causes, outcomes and monthly trends.
+- Built a refresh-safe operational model that separates source data from persistent agent updates.
+- Simulated **86 weeks** of workload, capacity, backlog, dependencies and case ageing.
+- Automated accounting checks that safely identified **500 unique simulated processed-refund matches** while retaining ambiguous cases for agent review.
+- Created an agent-facing Excel workbook, an interactive Power BI dashboard and a working Streamlit workflow prototype.
+
+### Featured Portfolio Evidence
+
+- [SQL Business Analysis](notebooks/06_sql_business_analysis.ipynb) — documented business queries covering value, departments, causes, outcomes and trends.
+- [Operational Backlog Simulation](notebooks/07_generate_weekly_status_feed.ipynb) — workload, capacity, backlog, dependencies and case-age modelling.
+- [Refresh-Safe Agent Workbook](notebooks/09_create_agent_workbook.ipynb) — controlled Excel workflow that preserves persistent updates.
+- [Automated Refund Check](notebooks/10_auto_check_processed_refunds.ipynb) — reproducible matching controls, exception handling and safe automated completion.
+- [Streamlit Workflow Prototype](app/Operational_Control.py) — shared queues, dependencies, completion controls and audit history backed by SQLite.
+- [Data Model Documentation](docs/data_model.md) — source, persistent, accounting and prototype database design.
+
+---
+
 ## Business Problem
 
 The Debt Held process relies on a monthly Power BI snapshot that is exported into an Excel workbook. Agents manually review each case, determine whether a refund is required and update the workbook as work progresses.
@@ -32,6 +52,7 @@ This project investigates the operational process using synthetic data to answer
 - Build a working shared operational and agent workflow prototype
 
 ---
+
 ## Working Workflow Prototype
 
 A working Streamlit prototype demonstrates how the missed-refund process could move from a static Power BI export and shared Excel workbook to a controlled SQLite-backed workflow.
@@ -223,6 +244,8 @@ This project demonstrates practical experience with:
 - **Python** – generating and preparing synthetic datasets
 - **Pandas** – data manipulation and transformation
 - **SQL & SQLite** – creating a reproducible database, querying operational data, using aggregation, grouping, `CASE` statements and conditional calculations
+- **Excel & Power Query** – building a controlled agent workbook and merging refreshable source data with persistent updates
+- **Streamlit** – developing a shared SQLite-backed workflow prototype with assignments, dependencies and audit events
 - **Power BI** – interactive dashboard development
 - **DAX** – creating KPIs and business measures
 - **Data Visualisation** – presenting operational insights through charts and dashboards
@@ -232,41 +255,25 @@ This project demonstrates practical experience with:
 
 ---
 
-## Tools
+## Synthetic Data and Privacy
 
-- Python
-- Pandas
-- SQL
-- Power BI
-- Git & GitHub
-- VS Code
+This project was inspired by a genuine insurance operations process, but it contains no real customer or company information.
 
-## About the Data
+All records were generated using documented business rules and operational assumptions. The distributions and relationships simulate realistic patterns without reproducing confidential production data.
 
-This project does not contain real customer or company data.
-
-The dataset is entirely synthetic and has been generated using business rules based on operational experience within an insurance environment.
-
-The distributions and relationships are designed to simulate realistic patterns rather than reproduce actual company data.
-
-## Why Synthetic Data?
-
-This project was inspired by a genuine operational process encountered in an insurance environment.
-
-To protect customer privacy and confidential business information, all data used in this repository is synthetically generated using documented business rules and operational assumptions.
-
-The aim is to demonstrate analytical thinking, data modelling and reporting techniques rather than reproduce production data.
+The dataset is intended to demonstrate analytical thinking, data modelling, reporting and process-improvement techniques.
 
 ## Refresh-Safe Agent Workbook
 
-The project includes a simulated Excel workbook for agents reviewing missed-refund cases.
+The project includes a simulated Excel interface for agents reviewing missed-refund cases while keeping refreshable source fields separate from persistent operational updates.
 
-Fresh source data is kept separate from persistent agent updates. Notebook `09_create_agent_workbook.ipynb` merges them by `Case ID`, preserves existing workbook edits and synchronises agent-entered values back to the update table.
+Notebook 09 imports permitted workbook edits, synchronises them to `agent_updates.csv` and rebuilds the workbook using a validated one-to-one `Case ID` merge. Records completed by the automated accounting check remain backend controlled and cannot be overwritten by older workbook values.
 
 The workbook includes:
 
 - essential policy, client, balance and cancellation information
 - visually highlighted editable fields
 - controlled dropdown lists for agents, statuses and outcomes
-- automatic completion ownership and dates
-- protection against source refreshes overwriting agent notes
+- automatically maintained completion ownership and dates
+- protection for agent notes, assignments and automated completions
+- validation for duplicate, missing and incorrectly completed records
