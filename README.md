@@ -158,8 +158,10 @@ missed-refund-analysis/
 │   └── project-charter.md
 │
 ├── images/
-│   └── dashboard-overview.png
-│
+│   ├── dashboard-overview.png
+│   ├── prototype-agent-case-review.png
+│   └── prototype-operational-control.png
+|
 ├── notebooks/
 │   ├── 01_generate_powerbi_snapshot.ipynb
 │   ├── 02_validate_snapshot.ipynb
