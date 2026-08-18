@@ -146,6 +146,8 @@ This table contains information entered or maintained by trained agents. It is s
 | `Completion Date` | System | Automatically recorded when the status changes to `Completed`. |
 | `Last Updated Date` | System | Automatically recorded whenever agent record changes. |
 
+These status values describe the current CSV and SQLite implementation. The planned Dataverse model consolidates `Awaiting Senior Review` and `Awaiting Other Department` into `Awaiting Dependency`, with `Dependency Type` identifying whether the case requires `Senior Review` or `Other Department`.
+
 ### Agent Update Rules
 
 - Each `Case ID` can appear only once in `agent_updates`.
@@ -238,7 +240,7 @@ The accounting feed has a grain of one row per refund transaction. Transactions 
 
 A case can be completed automatically only when:
 
-- it has not been completed manually
+- its current `Case Status` is not `Completed`
 - the policy and client numbers match
 - the refund amount equals the outstanding amount
 - the refund was processed after the snapshot date
@@ -279,3 +281,172 @@ The Streamlit application reads and updates the SQLite database rather than edit
 Conditional SQL updates protect cases from conflicting changes. For example, an agent can assign a case only when it is still open and unassigned.
 
 Running `app/init_database.py` rebuilds the prototype from the controlled CSV inputs and resets the `workflow_events` table. This provides a clean, reproducible demonstration environment.
+
+ the `workflow_events` table. This provides a clean, reproducible demonstration environment.
+(.venv-1) PS C:\Missed Refund Detection and Process Improvement> Select-String -Path docs\*.md -Pattern 'â'
+(.venv-1) PS C:\Missed Refund Detection and Process Improvement>
+
+(.venv-1) PS C:\Missed Refund Detection and Process Improvement> git diff --check
+docs/data_model.md:285: trailing whitespace.
++(.venv-1) PS C:\Missed Refund Detection and Process Improvement>
+(.venv-1) PS C:\Missed Refund Detection and Process Improvement> ## Planned Dataverse Model
+
+The planned Dataverse model translates the refresh-safe local prototype into a structured Power Platform data layer. It remains part of the same missed-refund project and does not replace the historical analytical dataset.
+
+The model separates source-controlled information, agent-entered operational information, accounting transactions and append-only audit history. This prevents source refreshes and automated checks from overwriting completed operational work.
+
+### Planned Tables
+
+| Table | Purpose |
+|---|---|
+| `Cases` | Refreshable case information originating from the monthly discrepancy report. |
+| `Case Work` | Persistent assignment, notes, dependency, status and completion information. |
+| `Review Agents` | Controlled list of agents currently or historically associated with the review process. |
+| `Refund Transactions` | Read-only accounting transactions used for automated matching. |
+| `Automation Runs` | One summary record for each logical automated accounting check. |
+| `Automation Results` | One case-level result for each eligible case checked during a run. |
+| `Refresh Runs` | Audit record for every attempted source refresh. |
+| `Workflow Events` | Append-only history of assignments, updates, dependencies, completions and reopenings. |
+
+Dependency information is stored in `Case Work` because the prototype requires no more than one current dependency per case. Data-quality totals are stored in `Refresh Runs`. Separate dependency and data-quality-exception tables may be introduced later if the process requires multiple concurrent dependencies or row-level exception management.
+
+### Planned Relationships
+
+| Parent table | Related table | Relationship | Purpose |
+|---|---|---|---|
+| `Cases` | `Case Work` | One to zero-or-one | Ensures each case has no more than one current operational record. |
+| `Review Agents` | `Case Work` | One to many | Allows one authorised agent to work multiple cases. |
+| `Cases` | `Workflow Events` | One to many | Preserves the complete history for each case. |
+| `Review Agents` | `Workflow Events` | One to many | Identifies the agent responsible for a recorded action when applicable. |
+| `Automation Runs` | `Automation Results` | One to many | Groups all case-level decisions produced by one run. |
+| `Cases` | `Automation Results` | One to many | Allows unresolved cases to be checked again during later runs. |
+| `Refund Transactions` | `Automation Results` | One to many | Links an optional confirmed transaction to results across different runs. |
+| `Refresh Runs` | `Cases` | One to many | Records the first and most recent refresh associated with each case. |
+
+A case may receive multiple automation results only while it remains unresolved. Cases with a status of `Completed` are excluded before matching and checked again immediately before any automated update is applied.
+
+### Identifiers
+
+Dataverse generates an internal GUID for every record. The following readable business identifiers and alternate keys support controlled imports, upserts and duplicate prevention.
+
+| Table | Business identifier or alternate key |
+|---|---|
+| `Cases` | `Case ID` |
+| `Case Work` | Unique `Case` lookup |
+| `Review Agents` | `Agent Code` |
+| `Refund Transactions` | `Refund Transaction ID` |
+| `Automation Runs` | `Automation Run ID` |
+| `Automation Results` | Combined `Automation Run` and `Case` lookups |
+| `Refresh Runs` | `Refresh Run ID` |
+| `Workflow Events` | Automatically generated `Event ID` |
+
+The unique `Case` lookup in `Case Work` enforces the logical one-to-one relationship. The combined automation-result key prevents the same case from receiving duplicate results within one logical run.
+
+### Update Ownership
+
+| Table | Permitted creator or updater |
+|---|---|
+| `Cases` | Source refresh process only |
+| `Case Work` | Agent app, manager app and controlled automation |
+| `Review Agents` | Manager or administrator |
+| `Refund Transactions` | Accounting import process only |
+| `Automation Runs` | Automated process only |
+| `Automation Results` | Automated process only |
+| `Refresh Runs` | Refresh process only |
+| `Workflow Events` | Append-only records created by apps and automation |
+
+Agents may self-assign or unassign open cases, enter notes, record dependencies and complete investigations. They cannot edit source, accounting or audit information.
+
+Managers may reassign open cases and reopen completed cases. Reopening requires a reason, clears the current terminal completion values and creates a workflow event preserving the previous outcome.
+
+Automation may update only approved completion fields following an exact accounting match. It cannot alter assignments, agent notes or previously completed records.
+
+Business and audit records cannot be deleted through the prototype application.
+
+### Operational Status Definitions
+
+| Case Status | Definition | Automation eligible |
+|---|---|---|
+| `Open` | Unresolved case, whether unassigned or assigned. | Yes |
+| `Awaiting Dependency` | Waiting for another department or senior review. | Yes |
+| `Completed` | Resolved case locked from normal updates. | No |
+
+The model does not use an `In Progress` status. Assignment identifies that an agent is working a case.
+
+`Reopened` is recorded as a workflow event. After an authorised manager reopens a case, its current status returns to `Open`.
+
+### Final Outcome Definitions
+
+| Final Outcome | Definition |
+|---|---|
+| `Refund Processed` | An agent processed the refund following investigation. |
+| `Refund Already Processed` | A valid accounting transaction confirms that the refund had already been processed. |
+| `No Refund Due` | Investigation confirmed that no refund was required. |
+
+Automation may set only `Refund Already Processed`.
+
+The historical analytical outcomes remain valid and map to the improved operational model as follows:
+
+| Historical outcome | Improved operational interpretation |
+|---|---|
+| `Actioned` | `Refund Processed` |
+| `No Action` | `Refund Already Processed` or `No Refund Due` |
+| `Raised` | `Awaiting Dependency`, followed by a genuine final outcome |
+
+### Dependency Definitions
+
+| Dependency Type | Definition |
+|---|---|
+| `Other Department` | Another department must investigate or complete an action. |
+| `Senior Review` | A senior agent or manager must decide or approve an action. |
+
+A dependency records its owner, raised date, target date and current details within `Case Work`.
+
+### Refresh Audit Design
+
+Every refresh attempt creates one `Refresh Runs` record containing:
+
+- the refresh ID, source filename, snapshot date and file hash
+- start time, completion time, status and triggering user or process
+- rows received, inserted, updated, unchanged and rejected
+- duplicate and missing-required-value counts
+- error details
+- confirmation that operational records were preserved
+
+Run status values are `Started`, `Succeeded`, `Rejected` and `Failed`.
+
+A source refresh cannot be recorded as successful unless persistent assignments, notes, statuses and outcomes were preserved.
+
+### Automation Audit Design
+
+Every logical accounting check creates one `Automation Runs` record and one `Automation Results` record for each eligible case checked.
+
+The run record stores:
+
+- accounting extract details and source file hash
+- automation rule version
+- start time, completion time and run status
+- eligible and excluded case totals
+- decision and exception totals
+- updates applied, skipped updates and error details
+
+Each case-level result stores:
+
+- the automation run and case
+- check timestamp, decision and result reason
+- optional matched refund transaction
+- candidate count, expected amount and matched amount
+- refund processed date
+- whether automatic completion was approved and applied
+
+Controlled decisions are `Auto Complete`, `Agent Review` and `Ambiguous Match`.
+
+Controlled result reasons are:
+
+- `Exact Match`
+- `No Accounting Transaction`
+- `Amount Mismatch`
+- `Refund Not After Snapshot`
+- `Multiple Valid Matches`
+
+Completed cases are excluded before matching. Immediately before applying an approved update, the automation checks the persistent case status again. This protects cases completed by an agent while an automation run is in progress.
