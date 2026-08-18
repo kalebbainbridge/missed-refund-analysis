@@ -59,8 +59,6 @@ with sqlite3.connect(DATABASE_PATH) as connection:
             [Client Number],
             [Outstanding Amount],
             [Cancellation Status],
-            [Refund Type],
-            [Root Cause],
             [Agent Working],
             [Agent Notes],
             [Case Status],
@@ -189,8 +187,6 @@ queue_display = filtered_queue[
         "Client Number",
         "Outstanding Amount",
         "Cancellation Status",
-        "Refund Type",
-        "Root Cause",
         "Automated Check Result",
         "Agent Working",
     ]
@@ -246,12 +242,6 @@ if selected_case_id:
 
     st.write("**Cancellation status**")
     st.write(selected_case["Cancellation Status"])
-
-    st.write("**Refund type**")
-    st.write(selected_case["Refund Type"])
-
-    st.write("**Root cause**")
-    st.write(selected_case["Root Cause"])
 
     st.subheader("Automated accounting check")
 

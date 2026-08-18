@@ -109,8 +109,6 @@ with sqlite3.connect(DATABASE_PATH) as connection:
             [Client Number],
             [Outstanding Amount],
             [Cancelling Department],
-            [Refund Type],
-            [Root Cause],
             [Agent Working]
         FROM operational_case_view
         WHERE [Case Status] = 'Open'
