@@ -38,6 +38,8 @@ The dataset contains three main groups of information:
 3. **Investigation result**  
    Reviewing agent, root cause, customer-contact status and case outcome.
 
+`Refund Type`, `Root Cause`, `Customer Contacted`, `Agent Working` and `Outcome` are deliberately generated analytical enrichment. They support the exploratory, SQL and Power BI analysis but should not be interpreted as fields available directly from the real monthly discrepancy report. The project uses them to demonstrate the analysis that could become possible through improved structured data capture.
+
 ## Data Relationships
 
 - One `Client Number` may be associated with multiple `Policy Number` values.
@@ -115,14 +117,13 @@ This table contains case information supplied by the monthly source snapshots. I
 | `Client Number` | Synthetic customer identifier. |
 | `Snapshot Date` | Month-end date of the source snapshot. |
 | `Outstanding Amount` | Balance requiring investigation. |
-| `Cancellation Status` | Whether the policy is `Cancelled` or `Void`. |
+| `Cancellation Status` | Whether the policy is `Cancelled` or `Void`|
 | `Cancelling Department` | Department that processed the cancellation. |
-| `Cancelling Agent` | Synthetic identifier for the cancelling agent. |
-| `Refund Type` | Cancellation scenario associated with the refund. |
-| `Root Cause` | Analytical reason the refund remained outstanding. |
-| `Customer Contacted` | Whether the customer had contacted the business before review. |
+| `Cancelling Agent` | Synthetic identifier for the cancelling agent.
 
-`Agent Working` and `Outcome` are excluded because they represent agent activity rather than source-controlled case attributes.
+`Refund Type`, `Root Cause` and `Customer Contacted` remain available in the synthetic analytical dataset, but they are not fields supplied by the real source discrepancy report. They represent deliberately generated analytical enrichment informed by operational experience.
+
+`Agent Working`, `Outcome`, notes and completion information are also excluded because they represent investigation or workflow activity rather than source-controlled case attributes.
 
 ### Agent Updates Table
 
@@ -131,6 +132,7 @@ This table contains case information supplied by the monthly source snapshots. I
 **Grain:** One row per `Case ID`.
 
 This table contains information entered or maintained by trained agents. It is stored separately and is never replaced during a source refresh.
+
 #### Operational Update Fields
 
 | Field | Maintained By | Description |
@@ -205,7 +207,7 @@ The workbook contains only the information agents need to review cases:
 - Case Status
 - Final Outcome
 
-Source-controlled fields are refreshed from `source_cases.csv`. Permitted agent-entered fields are preserved from the existing workbook and synchronised back to `agent_updates.csv`. Records completed by `Automated Check` remain controlled by the persistent backend.
+Source-controlled fields are refreshed from `source_cases.csv`. Permitted agent-entered fields are preserved from the existing workbook and synchronised back to `agent_updates.csv`. Once a case is completed—whether by an agent or by `Automated Check`—it becomes controlled by the persistent backend and cannot be overwritten by older workbook values.
 
 ### Refresh Protection
 
@@ -218,6 +220,7 @@ When an agent record changes:
 - `Completion Date` is populated automatically
 - cases completed by an agent require an agent assignment and a final outcome
 - automated completions require a final outcome but do not require an agent assignment
+- all previously completed cases are read-only during workbook synchronisation
 
 The workbook uses filters, frozen headings, currency formatting and controlled dropdown lists. Source fields remain visually separate from the pale-yellow editable fields.
 
@@ -227,7 +230,9 @@ The workbook uses filters, frozen headings, currency formatting and controlled d
 
 **Accounting feed:** `data/accounting/refund_transactions.csv`
 
-**Audit results:** `data/accounting/automated_refund_check_results.csv`
+**Current run results:** `data/accounting/automated_refund_check_results.csv`
+
+**Run history:** `data/accounting/automated_refund_check_history.csv`
 
 The accounting feed has a grain of one row per refund transaction. Transactions are matched to operational cases using both `Policy Number` and `Client Number`.
 
@@ -249,7 +254,9 @@ Confirmed unique matches are recorded as:
 - `Completed By`: `Automated Check`
 - `Completion Date`: accounting refund processed date
 
-The audit-results table retains the decision, matching counts and confirmed transaction details for reporting and control purposes.
+The current-results file records the latest case-level automation decision, matching counts and confirmed transaction details.
+
+The history file adds an `Automation Run ID` and run date. The combination of `Automation Run ID` and `Case ID` must be unique. Rerunning the same automation run replaces that run’s earlier history rows rather than creating duplicates, while future run IDs can be retained for reporting and audit purposes.
 
 ## Workflow Prototype Database
 
