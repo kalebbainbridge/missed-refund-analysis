@@ -1,0 +1,2 @@
+Refund Transaction ID,Policy Number,Client Number,Refund Amount,Refund Processed By,Refund Processed Date,Refund Reason
+TEST-FAILURE-RT-001,PET000002,CL000155,2.39,TEST-FIN001,2025-02-01,Synthetic runner rollback test

@@ -310,6 +310,8 @@ The model separates source-controlled information, agent-entered operational inf
 
 Dependency information is stored in `Case Work` because the prototype requires no more than one current dependency per case. Data-quality totals are stored in `Refresh Runs`. Separate dependency and data-quality-exception tables may be introduced later if the process requires multiple concurrent dependencies or row-level exception management.
 
+Case Work also stores a controlled, agent-captured Investigation Reason, defined in the data dictionary and protected from source refreshes and automation.
+
 ### Planned Relationships
 
 | Parent table | Related table | Relationship | Purpose |
@@ -357,7 +359,13 @@ The unique `Case` lookup in `Case Work` enforces the logical one-to-one relation
 
 Agents may self-assign or unassign open cases, enter notes, record dependencies and complete investigations. They cannot edit source, accounting or audit information.
 
-Managers may reassign open cases and reopen completed cases. Reopening requires a reason, clears the current terminal completion values and creates a workflow event preserving the previous outcome.
+Managers and authorised senior reviewers may unassign or reassign unresolved cases, including cases awaiting a dependency. No reason is required. Assignment changes preserve notes, investigation reasons and dependency details, and automatically record the actor, timestamp and previous/new assignment in Workflow Events.
+
+Managers and approved senior reviewers have the same application permissions. Both may unassign or reassign unresolved cases without providing a reason.
+
+Both may reopen completed cases with a mandatory reason. Reopening returns the status to Open, clears the current Final Outcome, Completed By and Completion Date, and preserves the previous completion details in Workflow Events.
+
+These permissions apply only to approved senior reviewers, not automatically to every agent with seniority.
 
 Automation may update only approved completion fields following an exact accounting match. It cannot alter assignments, agent notes or previously completed records.
 

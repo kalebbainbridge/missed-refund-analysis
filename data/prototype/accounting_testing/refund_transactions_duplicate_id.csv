@@ -1,0 +1,12 @@
+Refund Transaction ID,Policy Number,Client Number,Refund Amount,Refund Processed By,Refund Processed Date,Refund Reason
+TEST-RT-001,PET000001,CL000029,4.11,TEST-FIN001,2025-02-01,Synthetic test: Exact match
+TEST-RT-001,PET000002,CL000155,3.39,TEST-FIN001,2025-02-01,Synthetic test: Amount mismatch
+TEST-RT-003,PET000003,CL000179,21.12,TEST-FIN001,2025-01-30,Synthetic test: Refund before identification
+TEST-RT-004,PET000004,CL000032,175.71,TEST-FIN001,2025-01-31,Synthetic test: Refund on identification date
+TEST-RT-005,PET000005,CL000075,271.06,TEST-FIN001,2025-02-01,Synthetic test: Multiple valid matches
+TEST-RT-006,PET000005,CL000075,271.06,TEST-FIN001,2025-02-02,Synthetic test: Multiple valid matches
+TEST-RT-007,PET000007,CL000197,61.46,TEST-FIN001,2026-09-01,Synthetic test: Refund after extract date
+TEST-RT-008,PET000008,CL000036,32.46,TEST-FIN001,2026-08-31,Synthetic test: Refund on extract date
+TEST-RT-009,TEST-POL-001,TEST-WRONG-CLIENT,25.0,TEST-FIN001,2026-08-01,Synthetic test: Wrong client identifier
+TEST-RT-010,TEST-POL-002,TEST-CLI-002,48.5,TEST-FIN001,2026-07-31,Synthetic test: Amount and date match different transactions
+TEST-RT-011,TEST-POL-002,TEST-CLI-002,49.50,TEST-FIN001,2026-08-01,Synthetic test: Amount and date match different transactions

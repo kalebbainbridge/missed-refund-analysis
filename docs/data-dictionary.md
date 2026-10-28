@@ -218,6 +218,7 @@ This table contains persistent operational information protected from source ref
 | `Completed By` | Text | Agent code or `Automated Check`; blank until completion. |
 | `Completion Date` | Date | Date the case reached a terminal outcome. |
 | `Last Updated Date` | Date and time | Most recent controlled operational update. |
+| `Investigation Reason` | Choice | Agent-recorded reason; defaults to `Not Yet Determined`. See Agent-Captured Investigation Reason for values and rules. |
 
 Assignment identifies whether an agent is working an open case, so no separate `In Progress` status is required.
 
@@ -345,15 +346,94 @@ This append-only table records the operational history of each case.
 | `Case` | Lookup | Case affected by the event. |
 | `Event Type` | Choice | Assignment, dependency, completion, automation or reopening action. |
 | `Event Timestamp` | Date and time | Time the action occurred. |
-| `Actor Type` | Choice | `Agent`, `Manager` or `Automated Process`. |
+| `Actor Type` | Choice | `Agent`, `Manager`, `Senior` or `Automated Process`. |
 | `Review Agent` | Lookup | Agent or manager responsible when applicable. |
 | `Previous Status` | Choice | Case status before the action. |
 | `New Status` | Choice | Case status after the action. |
 | `Previous Assigned Agent` | Lookup | Assignment before the action. |
 | `New Assigned Agent` | Lookup | Assignment after the action. |
-| `Event Reason` | Multiline text | Reason or controlled explanation for the action. |
+| `Event Reason` | Multiline text | Required for manager and senior reopening; not required for assignment changes. |
 | `Automation Run` | Lookup | Related automation run for automated events; blank otherwise. |
+| `Previous Final Outcome` | Choice | Final outcome before reopening; blank when not applicable. |
+| `Previous Completed By` | Text | Completion identity before reopening. |
+| `Previous Completion Date` | Date | Completion date before reopening. |
 
 Expected event types include assignment, unassignment, reassignment, notes updated, dependency raised, dependency resolved, manual completion, automated completion and manager reopening.
 
 Existing workflow events cannot be edited or deleted through the prototype.
+
+## Controlled Accounting Check — Phase 4
+
+Notebook: `notebooks/12_controlled_accounting_check.ipynb`
+
+This implementation extends the original accounting demonstration with persistent eligibility checks, guarded completion updates and transactional audit history.
+
+### Matching Dates
+
+- `First Identified Date` is the original case-identification date and remains unchanged by monthly refreshes.
+- `Snapshot Date` is the latest accepted source snapshot containing the case.
+- A matching refund must occur strictly after `First Identified Date` and on or before the accounting extract date.
+- `Completion Date` records the matched refund’s processed date.
+- `Last Updated Date` records the actual automation application timestamp.
+
+### Decision Values
+
+| Decision | Meaning |
+|---|---|
+| `Auto Complete` | Exactly one transaction satisfies every matching rule. |
+| `Agent Review` | No transaction satisfies every matching rule. |
+| `Ambiguous Match` | More than one transaction satisfies every matching rule. |
+
+Approval does not guarantee application. The saved case is checked again before completion.
+
+### Result Reasons
+
+| Result Reason | Meaning |
+|---|---|
+| `Exact Match` | Exactly one transaction satisfies all rules. |
+| `Multiple Valid Matches` | Multiple transactions satisfy all rules. |
+| `No Accounting Transaction` | No transaction matches both policy and client identifiers. |
+| `Amount Mismatch` | Transactions match the identifiers, but none matches the amount. |
+| `Refund Not After Identification` | Amount-matching transactions do not occur after identification. |
+| `Refund After Extract Date` | Amount-matching transactions occurring after identification are all later than the extract date. |
+
+Reasons are evaluated in the order implemented by `explain_case_result`. Date reasons examine amount-matching transactions, ensuring separate transactions cannot combine to satisfy different rules.
+
+`Refund Not After Identification` replaces the original implementation’s `Refund Not After Snapshot` terminology. `Refund After Extract Date` is an additional explicit reason.
+
+### Audit Storage
+
+- `automation_runs`: input fingerprint, extract date, rule version, run status and reconciliation counts.
+- `automation_results`: one decision per run and case, including approval and application indicators.
+- `workflow_events`: completion events saved atomically with applied updates.
+
+Audit amounts are stored as integer pennies.
+
+The combination of automation run ID and Case ID is unique. Repeating a successful run ID returns the original summary; a new logical check requires a new ID.
+
+## Agent-Captured Investigation Reason
+
+**Table:** Case Work
+**Field:** Investigation Reason
+**Type:** Choice
+**Default:** Not Yet Determined
+**Maintained by:** Assigned, authorised agent through controlled application updates
+
+| Value | Meaning |
+|---|---|
+| Not Yet Determined | Investigation is ongoing or the cause cannot be established. |
+| Payment Date Misunderstood | Investigation indicates confusion about payment or cover dates. |
+| Refund Action Missed | A required refund action was not completed. |
+| Waiting for Information | Missing information prevented progression. |
+| Refund Mailbox Delay | Delay in the refund mailbox process. |
+| Other | An established reason outside the controlled list. |
+
+### Rules
+
+- Other requires explanatory notes.
+- Completion with Not Yet Determined requires notes explaining that the financial outcome is established but the cause remains unknown.
+- Investigation Reason and Final Outcome are separate fields.
+- The reason is agent-recorded, not supplied by the monthly source report or inferred by automation.
+- Refreshes and accounting automation must preserve it.
+- Reason changes must be recorded in workflow history.
+- Refund Action Missed is the operational counterpart of the historical synthetic Agent Forgot category; historical data remains unchanged.
