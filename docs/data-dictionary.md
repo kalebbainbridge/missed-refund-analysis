@@ -223,7 +223,7 @@ This table contains persistent operational information protected from source ref
 
 Assignment identifies whether an agent is working an open case, so no separate `In Progress` status is required.
 
-A completed record is read-only for agents and automation. An authorised manager may reopen it with a mandatory reason, which is retained in `Workflow Events`.
+A completed record is read-only for agents and automation. An authorised manager or approved senior reviewer may reopen it with a mandatory reason, which is retained in Workflow Events.
 
 ### Review Agents
 
@@ -237,8 +237,26 @@ This table controls who may be assigned work without deleting historical agent i
 | `Eligible for Assignment` | Boolean | Whether the agent can currently receive cases. |
 | `Effective From` | Date | Date the agent became associated with the process. |
 | `Effective To` | Date | Date the association ended; blank while current. |
+| `Application Role` | Choice | `Agent`, `Approved Senior` or `Manager`. Defaults to `Agent`; controls permitted application actions. |
+| `Access Enabled` | Boolean | Whether the person may currently use the application. Defaults to `No` until access is approved. |
+| `Signed-in User` | Lookup | Associated Dataverse user identity. Must be unique when populated; required before enabling authenticated access. |
 
 Only agents with `Training Status = Authorised` and `Eligible for Assignment = Yes` appear in assignment controls. Historical agent records are marked inactive rather than deleted.
+
+### Application Access and Roles
+
+Training Status, assignment eligibility and application permissions are separate controls.
+
+- Access Enabled must be Yes before application actions are permitted.
+- Agents may claim and work cases only when Training Status is Authorised and Eligible for Assignment is Yes.
+- Approved Senior and Manager have the same application permissions, including unassignment, reassignment, exception review and controlled reopening.
+- Reopening requires a reason; assignment changes do not.
+- Receiving cases still requires authorised training and assignment eligibility, regardless of application role.
+- Disabling access prevents further actions without deleting historical identity or activity.
+- Role and access changes are restricted to an administrator and must be audited.
+- App screen visibility alone does not enforce permissions. Equivalent controls must be enforced by the backend.
+- The signed-in identity must be securely mapped to the relevant Review Agents record. Selecting an agent name is only suitable for the existing simulated prototype.
+- Training Status must not be Inactive for any application action
 
 ### Refund Transactions
 

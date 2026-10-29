@@ -295,6 +295,26 @@ The planned Dataverse model translates the refresh-safe local prototype into a s
 
 The model separates source-controlled information, agent-entered operational information, accounting transactions and append-only audit history. This prevents source refreshes and automated checks from overwriting completed operational work.
 
+### Application Roles and Identity
+
+Review Agents records application role separately from training and assignment eligibility.
+
+| Role | Permitted actions |
+|---|---|
+| Agent | Claim available cases and work their own assigned cases when authorised and eligible. View permitted case information and history. |
+| Approved Senior | Same application permissions as Manager. |
+| Manager | Oversee workload, unassign and reassign unresolved cases, review exceptions and reopen completed cases with a reason. |
+
+Access Enabled must be Yes for application actions. Inactive agents cannot act or receive assignments, regardless of role.
+
+Managers and approved seniors need authorised training and assignment eligibility if they also receive cases.
+
+Role, access, training and eligibility changes are administrator-controlled and audited. Application management permissions do not automatically grant administration rights.
+
+Signed-in identity must map uniquely to the corresponding Review Agents record. Backend permissions must enforce the role rules; hiding controls in the interface is insufficient.
+
+Historical identities and workflow events are retained when access is disabled.
+
 ### Planned Tables
 
 | Table | Purpose |
@@ -330,6 +350,7 @@ Case Work also stores a controlled, agent-captured Investigation Reason, defined
 | `Refund Transactions` | `Automation Results` | One to many | Links an optional confirmed transaction to results across different runs. |
 | `Refresh Runs` | `Cases` | One to many | Records the first and most recent refresh associated with each case. |
 | `Refresh Runs` | `Data Quality Exceptions` | One to many | Links each rejected source row to its refresh attempt. |
+| `Dataverse User` | `Review Agents` | One to zero-or-one | Maps a signed-in user to at most one review identity. Required before authenticated access is enabled. |
 
 A case may receive multiple automation results only while it remains unresolved. Cases with a status of `Completed` are excluded before matching and checked again immediately before any automated update is applied.
 
@@ -348,8 +369,13 @@ Dataverse generates an internal GUID for every record. The following readable bu
 | `Refresh Runs` | `Refresh Run ID` |
 | `Workflow Events` | Automatically generated `Event ID` |
 | `Data Quality Exceptions` | Combined `Refresh Run` and `Source Row Number` |
+| `Review Agents` | Unique populated `Signed-in User` lookup, in addition to the `Agent Code` alternate key |
 
 The unique `Case` lookup in `Case Work` enforces the logical one-to-one relationship. The combined automation-result key prevents the same case from receiving duplicate results within one logical run.
+
+The Signed-in User association must prevent duplicate populated user mappings. Historical synthetic agents may remain unmapped, but authenticated access cannot be enabled without a valid mapping.
+
+The chosen backend enforcement must be verified during implementation. A lookup field alone does not enforce uniqueness or permissions.
 
 ### Update Ownership
 
@@ -357,7 +383,7 @@ The unique `Case` lookup in `Case Work` enforces the logical one-to-one relation
 |---|---|
 | `Cases` | Source refresh process only |
 | `Case Work` | Agent app, manager app and controlled automation |
-| `Review Agents` | Manager or administrator |
+| `Review Agents` | Administrator maintains identity, role, access, training and assignment eligibility. Changes must be audited.
 | `Refund Transactions` | Accounting import process only |
 | `Automation Runs` | Automated process only |
 | `Automation Results` | Automated process only |

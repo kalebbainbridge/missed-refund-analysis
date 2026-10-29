@@ -60,7 +60,7 @@ Provides read-only access to:
 
 Completed cases are read-only during normal use.
 
-Only an authorised manager or senior may reopen a completed case. Reopening requires a reason and preserves the previous completion details in history.
+Only an authorised manager or approved senior reviewer may reopen a completed case. Reopening requires a reason and preserves the previous completion details in history.
 
 
 
@@ -83,7 +83,7 @@ These tests are specified but have not yet been executed in Power Apps.
 - Bulk actions report successful and blocked changes individually.
 - Stale updates cannot overwrite newer work.
 - Completed cases cannot be unassigned or reassigned.
-- Seniors cannot reopen completed cases.
+- Approved seniors and managers can reopen completed cases with a mandatory reason.
 - Managers must provide a reason to reopen a completed case.
 - Reopening returns the case to Open and clears current completion fields.
 - Previous completion details remain available in history.
@@ -111,3 +111,24 @@ Review-status changes must record who changed the status and when. This requires
 - Original values and rejection reasons remain read-only.
 - Marking Reviewed does not create or change a case.
 - Review-status changes retain actor and timestamp evidence.
+
+## Planned Access and Permission Tests
+
+These tests are specified but have not yet been executed.
+
+- Access Enabled = No blocks application actions for every role.
+- Training Status = Inactive blocks actions and assignment.
+- Agents can claim and work cases only when authorised and eligible.
+- Agents cannot modify another agent’s assigned case.
+- Approved seniors and managers have the same application permissions.
+- Both management roles can unassign and reassign unresolved cases without a reason.
+- Both management roles can reopen completed cases only with a reason.
+- Management permissions do not automatically make a person eligible to receive cases.
+- Management permissions do not grant authority to change roles or access settings.
+- Only an administrator can maintain roles, access, training and assignment eligibility.
+- Identity mapping rejects missing or duplicate signed-in identity associations.
+- Backend controls reject unauthorised actions even if the interface is bypassed.
+- Disabling access preserves historical identity and activity.
+- Changes to access, role, training and eligibility retain actor and timestamp evidence.
+
+These checks require the final backend and identity design. Simulated agent selection does not demonstrate authentication or production permission enforcement.
