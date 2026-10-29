@@ -89,3 +89,25 @@ These tests are specified but have not yet been executed in Power Apps.
 - Previous completion details remain available in history.
 - Exception and run-history views do not permit uncontrolled edits.
 - No business or audit records can be deleted through the application.
+## Data-Quality Exception Review
+
+Managers and approved seniors can:
+
+- Filter exceptions by refresh run and review status.
+- View the source filename, row number and reported Case ID.
+- Read validation reasons and original source values.
+- Mark an exception Reviewed.
+
+Review does not modify the original rejection evidence or load a case. Corrected input must pass a subsequent controlled refresh.
+
+Review-status changes must record who changed the status and when. This requires exception-level auditing because an invalid row may not link to an existing case.
+
+### Planned Tests
+
+- Missing or invalid Case IDs do not prevent exception capture.
+- One refresh attempt cannot contain duplicate exception records for the same source row.
+- Managers and approved seniors can mark exceptions Reviewed.
+- Agents cannot update review status.
+- Original values and rejection reasons remain read-only.
+- Marking Reviewed does not create or change a case.
+- Review-status changes retain actor and timestamp evidence.

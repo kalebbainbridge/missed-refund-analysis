@@ -30,6 +30,7 @@ The starting population contained:
 | Invalid-row processing | 6 accepted and 6 quarantined with original values and rejection reasons |
 | Missing required column | Attempt recorded as Rejected; case tables unchanged |
 | Deliberate processing failure | Attempt recorded as Failed; all case changes rolled back |
+| Out-of-order snapshot | June input rejected against July source data; rejection logged and both case tables unchanged |
 
 The valid refresh produced 2,873 source cases and 2,873 operational records.
 

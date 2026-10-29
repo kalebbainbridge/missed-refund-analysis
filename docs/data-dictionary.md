@@ -19,7 +19,8 @@ The main analytical dataset contains both simulated source attributes and delibe
 | `Case ID` | Text | Unique synthetic identifier for each missed-refund case. |
 | `Policy Number` | Text | Unique synthetic policy identifier. |
 | `Client Number` | Text | Synthetic customer identifier; one client may hold multiple policies. |
-| `Snapshot Date` | Date | Month-end date of the simulated Power BI snapshot. |
+| `Snapshot Date` | Date | Latest accepted monthly snapshot containing the case. Updated only by the source refresh process. |
+| `First Identified Date` | Date | Original snapshot date when the case first entered the workflow. Set on creation and preserved during later refreshes. Used as the lower date boundary for accounting matching. |
 | `Outstanding Amount` | Decimal | Outstanding balance requiring investigation, measured in pounds sterling. |
 | `Cancellation Status` | Category | Whether the policy was recorded as `Cancelled` or `Void`. |
 | `Cancelling Department` | Category | Department responsible for processing the policy cancellation. |
@@ -437,3 +438,28 @@ The combination of automation run ID and Case ID is unique. Repeating a successf
 - Refreshes and accounting automation must preserve it.
 - Reason changes must be recorded in workflow history.
 - Refund Action Missed is the operational counterpart of the historical synthetic Agent Forgot category; historical data remains unchanged.
+
+### Data Quality Exceptions
+
+One record represents one rejected source row within a refresh attempt. Multiple validation reasons may be recorded against that row.
+
+| Column | Type | Description |
+|---|---|---|
+| `Exception ID` | Autonumber | Readable exception identifier. |
+| `Refresh Run` | Lookup | Related Refresh Runs record. |
+| `Source Row Number` | Whole number | Original CSV record position, including the heading row. |
+| `Reported Case ID` | Text | Case identifier as received; may be blank or invalid. |
+| `Rejection Reasons` | Multiline text | Validation failures preventing the row from loading. |
+| `Original Row JSON` | Multiline text | Original source values retained for investigation. |
+| `Recorded At` | Date and time | Time the exception was recorded. |
+| `Review Status` | Choice | `Pending Review` or `Reviewed`; defaults to `Pending Review`. |
+
+The combination of Refresh Run and Source Row Number forms an alternate key, preventing duplicate exception records within one attempt.
+
+A Cases lookup is not mandatory because rejected records may have missing or invalid Case IDs.
+
+Refresh processing creates exception records. Managers and approved seniors may mark them Reviewed. Original source values and rejection reasons remain read-only.
+
+Reviewed does not mean the case was corrected or loaded. Corrected source data must pass a subsequent controlled refresh.
+
+Review-status changes must be audited. Exception records cannot be deleted through the prototype application.

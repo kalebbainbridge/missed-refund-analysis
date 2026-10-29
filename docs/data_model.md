@@ -307,8 +307,13 @@ The model separates source-controlled information, agent-entered operational inf
 | `Automation Results` | One case-level result for each eligible case checked during a run. |
 | `Refresh Runs` | Audit record for every attempted source refresh. |
 | `Workflow Events` | Append-only history of assignments, updates, dependencies, completions and reopenings. |
+| `Data Quality Exceptions` | Retains rejected source rows, validation reasons and review status, linked to the refresh attempt. |
 
-Dependency information is stored in `Case Work` because the prototype requires no more than one current dependency per case. Data-quality totals are stored in `Refresh Runs`. Separate dependency and data-quality-exception tables may be introduced later if the process requires multiple concurrent dependencies or row-level exception management.
+Dependency information is stored in Case Work because the prototype requires no more than one current dependency per case.
+
+Refresh Runs stores refresh totals and run-level outcomes. Data Quality Exceptions stores each rejected source row and its validation reasons. Rejected records remain available for review without entering Cases or overwriting existing case information.
+
+A separate dependency table may be introduced later if multiple concurrent dependencies are required.
 
 Case Work also stores a controlled, agent-captured Investigation Reason, defined in the data dictionary and protected from source refreshes and automation.
 
@@ -324,6 +329,7 @@ Case Work also stores a controlled, agent-captured Investigation Reason, defined
 | `Cases` | `Automation Results` | One to many | Allows unresolved cases to be checked again during later runs. |
 | `Refund Transactions` | `Automation Results` | One to many | Links an optional confirmed transaction to results across different runs. |
 | `Refresh Runs` | `Cases` | One to many | Records the first and most recent refresh associated with each case. |
+| `Refresh Runs` | `Data Quality Exceptions` | One to many | Links each rejected source row to its refresh attempt. |
 
 A case may receive multiple automation results only while it remains unresolved. Cases with a status of `Completed` are excluded before matching and checked again immediately before any automated update is applied.
 
@@ -341,6 +347,7 @@ Dataverse generates an internal GUID for every record. The following readable bu
 | `Automation Results` | Combined `Automation Run` and `Case` lookups |
 | `Refresh Runs` | `Refresh Run ID` |
 | `Workflow Events` | Automatically generated `Event ID` |
+| `Data Quality Exceptions` | Combined `Refresh Run` and `Source Row Number` |
 
 The unique `Case` lookup in `Case Work` enforces the logical one-to-one relationship. The combined automation-result key prevents the same case from receiving duplicate results within one logical run.
 
@@ -356,6 +363,7 @@ The unique `Case` lookup in `Case Work` enforces the logical one-to-one relation
 | `Automation Results` | Automated process only |
 | `Refresh Runs` | Refresh process only |
 | `Workflow Events` | Append-only records created by apps and automation |
+| `Data Quality Exceptions` | Refresh process creates records; managers and approved seniors may update Review Status only. Original rejection evidence remains read-only. |
 
 Agents may self-assign or unassign open cases, enter notes, record dependencies and complete investigations. They cannot edit source, accounting or audit information.
 
@@ -458,3 +466,14 @@ Controlled result reasons are:
 - `Multiple Valid Matches`
 
 Completed cases are excluded before matching. Immediately before applying an approved update, the automation checks the persistent case status again. This protects cases completed by an agent while an automation run is in progress.
+
+### Case Date and Retention Rules
+
+- New cases receive the incoming snapshot date as both Snapshot Date and First Identified Date.
+- Later accepted snapshots may update Snapshot Date but must preserve First Identified Date.
+- Accounting matching requires Refund Processed Date to be strictly after First Identified Date and on or before Accounting Extract Date.
+- Cases absent from a later snapshot are retained. Absence does not automatically complete or delete a case.
+- Last Seen Refresh changes only when an accepted source row contains that case.
+- Older snapshots must not overwrite newer source values. Out-of-order input requires rejection or a separately controlled historical-loading process.
+
+The local Phase 3 tests verified original-date preservation and retention of absent cases. Out-of-order snapshot rejection is implemented and tested in the local SQLite refresh runner. Equivalent enforcement remains required in the planned Power Platform implementation.
