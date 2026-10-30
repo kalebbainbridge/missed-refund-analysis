@@ -1,8 +1,10 @@
 from uuid import uuid4
+import hashlib
 
 import streamlit as st
 
 from app.database import get_connection
+from app.queue_filters import filter_case_queue
 from app.case_history_view import render_case_history
 from app.permissions import require_management
 from app.case_queries import load_management_queue
@@ -118,8 +120,45 @@ def render_manager_workspace():
     )
 
     queue_name = views[selected_view]
-    cases = queues[queue_name]
+    queue_cases = queues[queue_name]
+
+    search_column, assignment_column = st.columns(2)
+    search_text = search_column.text_input(
+        "Search case, policy or client",
+        key=f"management_search_{actor_id}_{queue_name}",
+    )
+
+    assignments = (
+        queue_cases["Agent Working"].fillna("").astype(str).str.strip()
+    )
+    assigned_codes = sorted(assignments.loc[assignments.ne("")].unique())
+    assignment_choice = assignment_column.selectbox(
+        "Assigned agent",
+        options=["All assignments", "Unassigned"] + assigned_codes,
+        key=f"management_assignment_{actor_id}_{queue_name}",
+    )
+
+    if assignment_choice == "All assignments":
+        assignment_mode, target_agent = "all", None
+    elif assignment_choice == "Unassigned":
+        assignment_mode, target_agent = "unassigned", None
+    else:
+        assignment_mode, target_agent = "agent", assignment_choice
+
+    cases = filter_case_queue(
+        queue_cases,
+        search_text,
+        assignment_mode=assignment_mode,
+        agent_id=target_agent,
+    )
+    filter_signature = hashlib.sha256(
+        repr((search_text.strip().casefold(), assignment_mode, target_agent))
+        .encode("utf-8")
+    ).hexdigest()[:16]
     st.subheader(selected_view)
+    st.caption(
+        f"Showing {len(cases):,} of {len(queue_cases):,} cases in this queue."
+    )
 
     if cases.empty:
         st.info("No cases in this queue.")
@@ -143,7 +182,7 @@ def render_manager_workspace():
         selection_mode="single-row",
         key=(
             f"management_table_{actor_id}_{queue_name}_"
-            f"{snapshot['revision']}"
+            f"{snapshot['revision']}_{filter_signature}"
         ),
         column_config={
             "Outstanding Amount": st.column_config.NumberColumn(

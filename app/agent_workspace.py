@@ -1,8 +1,10 @@
 from uuid import uuid4
+import hashlib
 
 import streamlit as st
 
 from app.database import get_connection
+from app.queue_filters import filter_case_queue
 from app.case_history_view import render_case_history
 from app.permissions import require_case_worker
 from app.case_queries import load_agent_queue
@@ -105,10 +107,21 @@ def render_agent_workspace():
     )
 
     queue_name = labels[selected_view]
-    cases = queues[queue_name]
+    queue_cases = queues[queue_name]
+    search_text = st.text_input(
+        "Search case, policy or client",
+        key=f"workspace_search_{agent_id}_{queue_name}",
+    )
+    cases = filter_case_queue(queue_cases, search_text)
+    filter_signature = hashlib.sha256(
+        search_text.strip().casefold().encode("utf-8")
+    ).hexdigest()[:16]
 
     st.subheader(selected_view)
-    st.caption("Refresh queues to load the latest changes.")
+    st.caption(
+        f"Showing {len(cases):,} of {len(queue_cases):,} cases in this queue. "
+        "Refresh queues to load the latest changes."
+    )
 
     if cases.empty:
         st.info("No cases in this queue.")
@@ -134,7 +147,7 @@ def render_agent_workspace():
         ),
         key=(
             f"workspace_table_{agent_id}_{queue_name}_"
-            f"{snapshot['revision']}"
+            f"{snapshot['revision']}_{filter_signature}"
         ),
         column_config={
             "Outstanding Amount": st.column_config.NumberColumn(
