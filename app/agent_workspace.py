@@ -3,6 +3,7 @@ from uuid import uuid4
 import streamlit as st
 
 from app.database import get_connection
+from app.case_history_view import render_case_history
 from app.permissions import require_case_worker
 from app.case_queries import load_agent_queue
 from app.case_actions import claim_case
@@ -202,6 +203,8 @@ def render_agent_workspace():
             visible_details.astype(str).rename("Value").to_frame(),
             width="stretch",
         )
+        render_case_history(case["Case ID"], agent_id)
+
         if queue_name == "completed":
             st.caption("Completed work is read-only.")
         else:

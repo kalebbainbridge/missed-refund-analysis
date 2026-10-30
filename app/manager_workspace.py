@@ -3,6 +3,7 @@ from uuid import uuid4
 import streamlit as st
 
 from app.database import get_connection
+from app.case_history_view import render_case_history
 from app.permissions import require_management
 from app.case_queries import load_management_queue
 from app.manager_case_details import (
@@ -164,6 +165,8 @@ def render_manager_workspace():
         visible_details.astype(str).rename("Value").to_frame(),
         width="stretch",
     )
+    render_case_history(case["Case ID"], actor_id)
+
     render_management_unassign(
         case,
         actor_id,
