@@ -6,8 +6,12 @@ from app.database import get_connection
 from app.permissions import require_case_worker
 from app.case_queries import load_agent_queue
 from app.case_actions import claim_case
-from app.agent_case_details import render_investigation_form
-
+from app.agent_case_details import (
+    render_investigation_form,
+    render_raise_dependency_form,
+    render_resolve_dependency_form,
+    render_release_control,
+)
 
 def render_agent_workspace():
     st.title("Agent Workspace")
@@ -198,11 +202,28 @@ def render_agent_workspace():
             visible_details.astype(str).rename("Value").to_frame(),
             width="stretch",
         )
-
         if queue_name == "completed":
             st.caption("Completed work is read-only.")
         else:
             render_investigation_form(
+                case,
+                agent_id,
+                snapshot["revision"],
+            )
+
+            render_raise_dependency_form(
+                case,
+                agent_id,
+                snapshot["revision"],
+            )
+
+            render_resolve_dependency_form(
+                case,
+                agent_id,
+                snapshot["revision"],
+            )
+
+            render_release_control(
                 case,
                 agent_id,
                 snapshot["revision"],
