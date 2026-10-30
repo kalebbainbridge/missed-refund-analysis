@@ -446,6 +446,7 @@ The combination of automation run ID and Case ID is unique. Repeating a successf
 | Waiting for Information | Missing information prevented progression. |
 | Refund Mailbox Delay | Delay in the refund mailbox process. |
 | Other | An established reason outside the controlled list. |
+| No Refund Due | Investigation confirmed that no refund was required. Only saved when completing with the No Refund Due final outcome. |
 
 ### Rules
 
@@ -456,6 +457,9 @@ The combination of automation run ID and Case ID is unique. Repeating a successf
 - Refreshes and accounting automation must preserve it.
 - Reason changes must be recorded in workflow history.
 - Refund Action Missed is the operational counterpart of the historical synthetic Agent Forgot category; historical data remains unchanged.
+- No Refund Due can only be saved during completion with the matching No Refund Due final outcome.
+- It cannot be saved as an interim investigation reason or used with another final outcome.
+- A genuine established investigation reason may still accompany a No Refund Due outcome.
 
 ### Data Quality Exceptions
 

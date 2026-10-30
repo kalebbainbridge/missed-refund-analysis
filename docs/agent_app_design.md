@@ -129,3 +129,6 @@ These tests are specified but have not yet been executed in Power Apps.
 - Manager or senior unassignment removes the case from the agent’s queue.
 - A stale agent save after reassignment or unassignment is blocked.
 - Completed cases are read-only.
+- No Refund Due reason is accepted with the No Refund Due completion outcome.
+- No Refund Due reason is rejected with either refund-processed outcome.
+- Save investigation cannot persist No Refund Due without completing the case.

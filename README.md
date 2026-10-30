@@ -121,65 +121,43 @@ These findings demonstrate analytical methods using intentionally generated scen
 ---
 
 ## Repository Structure
-
 ```text
 missed-refund-analysis/
-│
 ├── app/
 │   ├── Operational_Control.py
+│   ├── agent_workspace.py
+│   ├── agent_case_details.py
+│   ├── case_actions.py
+│   ├── case_queries.py
+│   ├── database.py
+│   ├── permissions.py
 │   ├── init_database.py
+│   ├── migrate_database.py
+│   ├── migrate_agents.py
+│   ├── migrate_no_refund_reason.py
 │   └── pages/
 │       └── 1_Agent_Case_Review.py
-│
 ├── dashboard/
 │   └── Missed_Refund_Analysis_Dashboard.pbix
-│
 ├── data/
 │   ├── accounting/
-│   │   ├── automated_refund_check_results.csv
-│   │   └── refund_transactions.csv
 │   ├── operational/
-│   │   ├── agent_case_workbook.xlsx
-│   │   ├── agent_updates.csv
-│   │   └── source_cases.csv
-│   ├── raw/                         # Synthetic monthly snapshots
-│   ├── reference/                   # Supporting category data
-│   ├── weekly/                      # Weekly operational simulation
+│   ├── prototype/
+│   │   ├── accounting_testing/
+│   │   └── refresh_testing/
+│   ├── raw/
+│   ├── reference/
+│   ├── weekly/
 │   └── combined_missed_refunds.csv
-│
-├── docs/
-│   ├── business-process.md
-│   ├── business_profile.md
-│   ├── business_questions.md
-│   ├── business_rules.md
-│   ├── data-dictionary.md
-│   ├── data_model.md
-│   ├── operational_workflow.md
-│   └── project-charter.md
-│
-├── images/
-│   ├── dashboard-overview.png
-│   ├── prototype-agent-case-review.png
-│   └── prototype-operational-control.png
-|
-├── notebooks/
-│   ├── 01_generate_powerbi_snapshot.ipynb
-│   ├── 02_validate_snapshot.ipynb
-│   ├── 03_exploratory_analysis.ipynb
-│   ├── 04_process_improvements.ipynb
-│   ├── 05_create_sql_database.ipynb
-│   ├── 06_sql_business_analysis.ipynb
-│   ├── 07_generate_weekly_status_feed.ipynb
-│   ├── 08_create_refresh_safe_tables.ipynb
-│   ├── 09_create_agent_workbook.ipynb
-│   └── 10_auto_check_processed_refunds.ipynb
-│
-├── sql/                             # Generated analytical SQLite database
+├── docs/                 # Business rules, models, designs and test evidence
+├── images/               # Dashboard and prototype screenshots
+├── notebooks/            # Notebooks 01–12: analysis, simulation and control tests
+├── sql/                  # Generated analytical database; excluded from Git
+├── tests/                # Automated case-action, permission and migration tests
 ├── .gitignore
 ├── README.md
 └── requirements.txt
 ```
-
 ---
 
 ## Running the Project
@@ -209,6 +187,26 @@ data/prototype/missed_refunds_prototype.db
 ```
 
 Running the initialisation script again resets prototype case activity and the workflow audit trail.
+
+### Upgrade the prototype schema
+
+After creating a new prototype database, or when upgrading an existing one, run:
+
+```powershell
+python -m app.migrate_database
+python -m app.migrate_agents
+python -c "from app.migrate_no_refund_reason import migrate_no_refund_reason; migrate_no_refund_reason()"
+```
+
+These migrations preserve existing operational records. Do not rerun
+`init_database.py` to upgrade an existing database: initialization resets
+prototype activity and workflow history.
+
+Run the regression tests with:
+
+```powershell
+python -m unittest discover -s tests -v
+```
 
 ### Launch the Streamlit application
 

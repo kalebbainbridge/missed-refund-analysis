@@ -329,7 +329,12 @@ def complete_case(
             else investigation_reason
         )
 
-        validate_investigation(reason, notes, completing=True)
+        validate_investigation(
+            reason,
+            notes,
+            completing=True,
+            final_outcome=final_outcome,
+        )
 
         result = connection.execute(
             """
@@ -634,15 +639,28 @@ INVESTIGATION_REASONS = (
     "Waiting for Information",
     "Refund Mailbox Delay",
     "Other",
+    "No Refund Due",
 )
 
 
-def validate_investigation(reason, notes, completing=False):
+def validate_investigation(
+    reason,
+    notes,
+    completing=False,
+    final_outcome=None,
+):
     if reason not in INVESTIGATION_REASONS:
         raise ValueError("Select a valid investigation reason.")
 
     if not isinstance(notes, str):
         raise ValueError("Investigation notes must be text.")
+
+    if reason == "No Refund Due":
+        if not completing or final_outcome != "No Refund Due":
+            raise ValueError(
+                "The No Refund Due investigation reason can only "
+                "be saved when completing with the No Refund Due outcome."
+            )
 
     if reason == "Other" and not notes.strip():
         raise ValueError(
