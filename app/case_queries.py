@@ -1,8 +1,7 @@
 import pandas as pd
 
 from app.database import DATABASE_PATH, get_connection
-from app.permissions import require_case_worker
-
+from app.permissions import require_case_worker, require_management
 
 def load_agent_queue(
     agent_id,
@@ -66,4 +65,54 @@ def load_agent_queue(
             """,
             connection,
             params=parameters,
+        )
+
+
+def load_management_queue(
+    actor_id,
+    queue_name,
+    database_path=DATABASE_PATH,
+):
+    queue_filters = {
+        "unresolved": """
+            work."Case Status" <> 'Completed'
+        """,
+        "dependencies": """
+            work."Case Status" IN (
+                'Awaiting Dependency',
+                'Awaiting Senior Review',
+                'Awaiting Other Department'
+            )
+        """,
+        "completed": """
+            work."Case Status" = 'Completed'
+        """,
+    }
+
+    if queue_name not in queue_filters:
+        raise ValueError("Select a valid management queue.")
+
+    condition = queue_filters[queue_name]
+
+    with get_connection(database_path) as connection:
+        require_management(connection, actor_id)
+
+        return pd.read_sql_query(
+            f"""
+            SELECT
+                cases.*,
+                work."Record Version",
+                work."Investigation Reason",
+                work."Dependency Type",
+                work."Dependency Owner",
+                work."Dependency Raised Date",
+                work."Dependency Target Date",
+                work."Dependency Details"
+            FROM operational_case_view AS cases
+            JOIN agent_updates AS work
+                ON cases."Case ID" = work."Case ID"
+            WHERE {condition}
+            ORDER BY cases."Snapshot Date", cases."Case ID";
+            """,
+            connection,
         )
