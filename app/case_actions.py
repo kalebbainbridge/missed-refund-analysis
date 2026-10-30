@@ -1,3 +1,5 @@
+from app.permissions import require_case_worker, require_management
+
 from datetime import datetime, timezone
 
 from app.database import DATABASE_PATH, get_connection
@@ -24,7 +26,7 @@ def save_case_notes(
 
     with get_connection(database_path) as connection:
         connection.execute("BEGIN IMMEDIATE;")
-
+        require_case_worker(connection, agent_id)
         previous = connection.execute(
             """
             SELECT "Case Status", "Investigation Reason"
@@ -126,6 +128,9 @@ def claim_case(
     updated_at = datetime.now(timezone.utc).isoformat()
 
     with get_connection(database_path) as connection:
+        connection.execute("BEGIN IMMEDIATE;")
+        require_case_worker(connection, agent_id)
+
         result = connection.execute(
             """
             UPDATE agent_updates
@@ -193,6 +198,7 @@ def release_case(
 
     with get_connection(database_path) as connection:
         connection.execute("BEGIN IMMEDIATE;")
+        require_case_worker(connection, agent_id)
 
         previous = connection.execute(
             """
@@ -298,6 +304,7 @@ def complete_case(
 
     with get_connection(database_path) as connection:
         connection.execute("BEGIN IMMEDIATE;")
+        require_case_worker(connection, agent_id)
 
         previous = connection.execute(
             """
@@ -435,6 +442,9 @@ def raise_dependency(
     details = details.strip()
 
     with get_connection(database_path) as connection:
+        connection.execute("BEGIN IMMEDIATE;")
+        require_case_worker(connection, agent_id)
+
         result = connection.execute(
             """
             UPDATE agent_updates
@@ -521,6 +531,7 @@ def resolve_dependency(
 
     with get_connection(database_path) as connection:
         connection.execute("BEGIN IMMEDIATE;")
+        require_case_worker(connection, agent_id)
 
         previous = connection.execute(
             """
@@ -647,3 +658,290 @@ def validate_investigation(reason, notes, completing=False):
             "Explain why the case can be completed "
             "while its investigation reason remains unknown."
         )
+def unassign_case(
+    case_id,
+    actor_id,
+    expected_version,
+    database_path=DATABASE_PATH,
+):
+    if not case_id or not actor_id:
+        raise ValueError("Case and actor identifiers are required.")
+
+    if type(expected_version) is not int or expected_version < 0:
+        raise ValueError("A valid loaded record version is required.")
+
+    updated_at = datetime.now(timezone.utc).isoformat()
+
+    with get_connection(database_path) as connection:
+        connection.execute("BEGIN IMMEDIATE;")
+        actor = require_management(connection, actor_id)
+
+        previous = connection.execute(
+            """
+            SELECT "Case Status", "Agent Working"
+            FROM agent_updates
+            WHERE "Case ID" = ?
+              AND "Record Version" = ?
+              AND "Case Status" IN (
+                  'Open',
+                  'Awaiting Dependency',
+                  'Awaiting Senior Review',
+                  'Awaiting Other Department'
+              );
+            """,
+            (case_id, expected_version),
+        ).fetchone()
+
+        if previous is None:
+            return False
+
+        previous_status, previous_agent = previous
+
+        if previous_agent is None or not previous_agent.strip():
+            return False
+
+        result = connection.execute(
+            """
+            UPDATE agent_updates
+            SET "Agent Working" = NULL,
+                "Last Updated Date" = ?,
+                "Record Version" = "Record Version" + 1
+            WHERE "Case ID" = ?
+              AND "Record Version" = ?
+              AND "Case Status" = ?
+              AND "Agent Working" = ?;
+            """,
+            (
+                updated_at,
+                case_id,
+                expected_version,
+                previous_status,
+                previous_agent,
+            ),
+        )
+
+        if result.rowcount != 1:
+            return False
+
+        connection.execute(
+            """
+            INSERT INTO workflow_events (
+                Case_ID,
+                Event_Type,
+                From_Status,
+                To_Status,
+                Agent_ID,
+                Event_Date,
+                Event_Notes
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?);
+            """,
+            (
+                case_id,
+                "Case Unassigned",
+                previous_status,
+                previous_status,
+                actor_id,
+                updated_at,
+                (
+                    f"Actor role: {actor['application_role']}\n"
+                    f"Previous agent: {previous_agent}\n"
+                    "New assignment: Unassigned"
+                ),
+            ),
+        )
+
+    return True
+def reassign_case(
+    case_id,
+    actor_id,
+    target_agent_id,
+    expected_version,
+    database_path=DATABASE_PATH,
+):
+    if not case_id or not actor_id or not target_agent_id:
+        raise ValueError("Case, actor and target agent are required.")
+
+    if type(expected_version) is not int or expected_version < 0:
+        raise ValueError("A valid loaded record version is required.")
+
+    updated_at = datetime.now(timezone.utc).isoformat()
+
+    with get_connection(database_path) as connection:
+        connection.execute("BEGIN IMMEDIATE;")
+
+        actor = require_management(connection, actor_id)
+        require_case_worker(connection, target_agent_id)
+
+        previous = connection.execute(
+            """
+            SELECT "Case Status", "Agent Working"
+            FROM agent_updates
+            WHERE "Case ID" = ?
+              AND "Record Version" = ?
+              AND "Case Status" IN (
+                  'Open',
+                  'Awaiting Dependency',
+                  'Awaiting Senior Review',
+                  'Awaiting Other Department'
+              );
+            """,
+            (case_id, expected_version),
+        ).fetchone()
+
+        if previous is None:
+            return False
+
+        previous_status, previous_agent = previous
+
+        if previous_agent == target_agent_id:
+            return False
+
+        result = connection.execute(
+            """
+            UPDATE agent_updates
+            SET "Agent Working" = ?,
+                "Last Updated Date" = ?,
+                "Record Version" = "Record Version" + 1
+            WHERE "Case ID" = ?
+              AND "Record Version" = ?
+              AND "Case Status" = ?
+              AND "Agent Working" IS ?;
+            """,
+            (
+                target_agent_id,
+                updated_at,
+                case_id,
+                expected_version,
+                previous_status,
+                previous_agent,
+            ),
+        )
+
+        if result.rowcount != 1:
+            return False
+
+        connection.execute(
+            """
+            INSERT INTO workflow_events (
+                Case_ID,
+                Event_Type,
+                From_Status,
+                To_Status,
+                Agent_ID,
+                Event_Date,
+                Event_Notes
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?);
+            """,
+            (
+                case_id,
+                "Case Reassigned",
+                previous_status,
+                previous_status,
+                actor_id,
+                updated_at,
+                (
+                    f"Actor role: {actor['application_role']}\n"
+                    f"Previous agent: {previous_agent or 'Unassigned'}\n"
+                    f"New assignment: {target_agent_id}"
+                ),
+            ),
+        )
+
+    return True
+def reopen_case(
+    case_id,
+    actor_id,
+    reason,
+    expected_version,
+    database_path=DATABASE_PATH,
+):
+    if not case_id or not actor_id:
+        raise ValueError("Case and actor identifiers are required.")
+
+    if not isinstance(reason, str) or not reason.strip():
+        raise ValueError("A reopening reason is required.")
+
+    if type(expected_version) is not int or expected_version < 0:
+        raise ValueError("A valid loaded record version is required.")
+
+    updated_at = datetime.now(timezone.utc).isoformat()
+
+    with get_connection(database_path) as connection:
+        connection.execute("BEGIN IMMEDIATE;")
+        actor = require_management(connection, actor_id)
+
+        previous = connection.execute(
+            """
+            SELECT
+                "Final Outcome",
+                "Completed By",
+                "Completion Date"
+            FROM agent_updates
+            WHERE "Case ID" = ?
+              AND "Case Status" = 'Completed'
+              AND "Record Version" = ?;
+            """,
+            (case_id, expected_version),
+        ).fetchone()
+
+        if previous is None:
+            return False
+
+        previous_outcome, previous_completed_by, previous_date = previous
+
+        result = connection.execute(
+            """
+            UPDATE agent_updates
+            SET "Case Status" = 'Open',
+                "Final Outcome" = NULL,
+                "Completed By" = NULL,
+                "Completion Date" = NULL,
+                "Last Updated Date" = ?,
+                "Record Version" = "Record Version" + 1
+            WHERE "Case ID" = ?
+              AND "Case Status" = 'Completed'
+              AND "Record Version" = ?;
+            """,
+            (
+                updated_at,
+                case_id,
+                expected_version,
+            ),
+        )
+
+        if result.rowcount != 1:
+            return False
+
+        connection.execute(
+            """
+            INSERT INTO workflow_events (
+                Case_ID,
+                Event_Type,
+                From_Status,
+                To_Status,
+                Agent_ID,
+                Event_Date,
+                Event_Notes
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?);
+            """,
+            (
+                case_id,
+                "Case Reopened",
+                "Completed",
+                "Open",
+                actor_id,
+                updated_at,
+                (
+                    f"Actor role: {actor['application_role']}\n"
+                    f"Reopening reason: {reason.strip()}\n"
+                    f"Previous outcome: {previous_outcome}\n"
+                    f"Previously completed by: {previous_completed_by}\n"
+                    f"Previous completion date: {previous_date}"
+                ),
+            ),
+        )
+
+    return True
